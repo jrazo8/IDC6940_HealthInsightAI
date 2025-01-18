@@ -1,7 +1,7 @@
 ---
-title: "Writing a great story for data science projects - spring 2025"
-subtitle: "This is a Report Template Quarto"
-author: "Students names (Advisor: Dr. Cohen)"
+title: "Diagnosing diseases using KNN- Spring 2025"
+subtitle: "An application of KNN to diagnose disease"
+author: "Jacqueline Razo (Advisor: Dr. Cohen)"
 date: '`r Sys.Date()`'
 format:
   html:
