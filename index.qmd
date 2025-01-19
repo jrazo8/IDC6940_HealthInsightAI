@@ -32,6 +32,13 @@ writing!
 
 ## Introduction
 
+- Week 1: 
+- Summary of research paper: DIABETES CLASSIFICATION BASED ON KNN
+
+This paper discusses the use of different types of KNN in order to classify diabetes. It does this by using matlab and six different types of KNN algorithms to classify glucose concentrations in the blood. The paper starts of with an explanation of how KNN algorithms work by using the Euclidean distance between the different classes. The KNN algorithm takes the closes N number of neighbors and assigns the class based on the nearest neighbors. Out of the six algorithms that were used the fine KNN was the one that was the most successful at correctly classifying the data. 
+
+- Summary of research paper: 
+
 The introduction should:
 
 
