@@ -35,12 +35,23 @@ writing!
 - Week 1: 
 - Summary of research paper: DIABETES CLASSIFICATION BASED ON KNN
 
-This paper discusses the use of different types of KNN in order to classify diabetes. It does this by using matlab and six different types of KNN algorithms to classify glucose concentrations in the blood. The paper starts of with an explanation of how KNN algorithms work by using the Euclidean distance between the different classes. The KNN algorithm takes the closes N number of neighbors and assigns the class based on the nearest neighbors. Out of the six algorithms that were used the fine KNN was the one that was the most successful at correctly classifying the data. 
+This paper discusses the use of different types of KNN in order to classify diabetes. It does this by using matlab and six different types of KNN algorithms to classify glucose concentrations in the blood. The paper starts of with an explanation of how KNN algorithms work by using the Euclidean distance between the different classes. The KNN algorithm takes the closes N number of neighbors and assigns the class based on the nearest neighbors. Out of the six algorithms that were used the fine KNN was the one that was the most successful at correctly classifying the data. [@ali2020diabetes]
 
 - Summary of research paper: Efficient kNN Classification With Different
 Numbers of Nearest Neighbors
 
-This paper proposes two more efficient KNN methods called the kTree and the k*Tree methods. The authors propose using a training stage using a decision tree to select the ideal number of K values to make the KNN more efficient. The authors found their method did reduce running cost and increased classification accuracy. 
+This paper proposes two more efficient KNN methods called the kTree and the k*Tree methods. The authors propose using a training stage using a decision tree to select the ideal number of K values to make the KNN more efficient. The authors found their method did reduce running cost and increased classification accuracy. [@zhang2017efficient]
+
+Week 2: 
+
+Summary of research paper: Diagnosis of Diabetes Mellitus using K Nearest Neighbor Algorithm
+
+This paper discusses the diagnosis of diabetes using a KNN algorithm. It describes what diabetes mellitus is and the health problems it causes in individuals. It also describes the different tools and techniques that can be used with health data in order to find health insights. It describes the way a KNN algorithm works. In the description it mentions the features of the KNN and how the algorithm works. The algorithm is described as taking a sample dataset with input variables and one output variable, taking a test dataset from the sample, finding the distance between each dataset in the training sample with the euclidean formula, then deciding the random variable of k where k is the number of nearest neighbors you will use to classify. Then it does the same thing to the test dataset and uses the K nearest members to find the output variable. After the classification, the authors go into detail of how they analyzed the results based on specificity. In addition, the authors describe the work other researchers have made in the field of using KNN to classify diseases. Finally, the paper describes the way they used mathlab to check for the accuracy of their results. [@saxena2014diagnosis]
+
+Summary of research paper: Efficient kNN classification algorithm for big data
+
+
+This paper proposes using a k- means clustering technique to separate big data dataset into several parts to make the KNN more efficient. KNN traditionally works by measuring the euclidean distance between different datasets to see what the nearest k neighnors are. This can be computationally expensive with big datasets. The authors of this paper used K-means clustering to create smaller datasets and then deploy the KNN on the smaller datasets. The authors concluded the LC-KNN worked the best because it had the highest accuracy and best time. [@deng2016efficient]
 
 The introduction should:
 
