@@ -32,6 +32,9 @@ writing!
 
 ## Introduction
 
+
+KNN is an algorithm that is being used in a variety of fields to classify or predict data. The KNN algorithm is a simple algorithm that classifies data based on how similar the instance is to a class of instances. This simple to understand algorithm has many practical uses in health where it has been successfully used to predict diseases such as diabetes, hypertension, and others. 
+
 - Week 2: 
 - Summary of research paper: DIABETES CLASSIFICATION BASED ON KNN
 
