@@ -53,6 +53,17 @@ Summary of research paper: Efficient kNN classification algorithm for big data
 
 The goal of this paper is to be able to use KNN in big data. This paper proposes using a k-means clustering technique to separate big data dataset into several parts to make the KNN more efficient. The reason this paper is important is because KNN traditionally work by measuring the euclidean distance between different datasets to see what the nearest k neighbors are and this can be computationally expensive with big datasets. The authors proposal would lead to a more efficient method of using knn. The authors concluded the LC-KNN worked the best because it had the highest accuracy and best time.[@deng2016efficient]
 
+
+Week 4: 
+
+A Review of Data Classification Using K-Nearest Neighbour Algorithm
+
+This paper focused on comparing different distances in classification algorithms with a focus on the KNN algorithm. It explains the methodology used in KNN. It states the KNN algorithm uses the nearest k-neighbors in order to classify data points. The paper states KNN uses the euclidean distance by default and it compares its performance using cityblock, cosine and correlation distances. In the end it found the euclidean distance was more efficient than the others. [@kataria2013review]
+
+Introduction to machine learning: k-nearest neighbors
+
+The author of this paper gave the reader an introduction into how KNN works and how to run it in R studio. He describes the methodology as assigning an unlabeled observation to a class by using labeled examples that are similar to it. It also describes the euclidean distance equation and offers alternatives to it like the Manhattan distance. The author also describes the impact the k has on the algorithm. It recommends setting the k equal to the square root of the number of observations in the training dataset. [@zhang2016introduction]
+
 The introduction should:
 
 
