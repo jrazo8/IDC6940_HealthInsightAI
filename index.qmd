@@ -21,80 +21,23 @@ editor:
 Slides: [slides.html](slides.html){target="_blank"} ( Go to `slides.qmd`
 to edit)
 
-::: callout-important
-**Remember:** Your goal is to make your audience understand and care
-about your findings. By crafting a compelling story, you can effectively
-communicate the value of your data science project.
-
-Carefully read this template since it has instructions and tips to
-writing!
-:::
 
 ## Introduction
 
+kNN is an algorithm that is being used in a variety of fields to classify or predict data. The kNN algorithm is a simple algorithm that classifies data based on how similar a datapoint is to a class of datapoints. One of the benefits of using this algorithmic model is how simple it is to use and the fact it’s non-parametric which means it fits a wide variety of datasets. One drawback from using this model is that it does have a higher computational cost than other models which means that it doesn’t perform as well or fast on big data. Despite this, the model’s simplicity makes it easy to understand and easy to implement in a variety of fields. One such field is the field of healthcare where kNN models have been successfully used to predict diseases such as diabetes and hypertension. In this paper we will focus on the methodology and application of kNN models in the field of healthcare to predict diabetes, a pressing public health problem. 
 
-KNN is an algorithm that is being used in a variety of fields to classify or predict data. The KNN algorithm is a simple algorithm that classifies data based on how similar the instance is to a class of instances. This simple to understand algorithm has many practical uses in health where it has been successfully used to predict diseases such as diabetes, hypertension, and others. 
+Machine learning is a promising field where computers are able to learn from prior data to perform a function such as regression, classification or even create new values or images. KNNs have emerged as easy to understand algorithms that are able to perform regression, classification, data imputation and many other uses. 
+KNNs are supervised learning algorithms that work by comparing a data point to other similar data points in order to label it. It works on the assumption that data points that are similar to each other must be in close proximity to each other. In the thesis [@zhang2016introduction], the author gave the reader an introduction into how KNN works and how to run a KNN model in R studio. He describes the methodology as assigning an unlabeled observation to a class by using labeled examples that are similar to it. It also describes the euclidean distance equation which is the default distance equation that is used for KNNs. The author also describes the impact the k parameter has on the algorithm. The K parameter is the parameter that tells the model how many neighbors it will use when trying to classify a datapoint. Zhang recommends setting the k parameter equal to the square root of the number of observations in the training dataset. 
 
-- Week 2: 
-- Summary of research paper: DIABETES CLASSIFICATION BASED ON KNN
+Zhang’s recommendation to set the k parameter could be a great starting point but the thesis [@zhang2017efficient] mentions how important the k parameter can be in the accuracy of the model. The authors of this thesis propose using a training stage where we use a decision tree to select the ideal number of K values and thus make the KNN more efficient. The authors deployed and tested two more efficient knn methods called kTree and the k*Tree methods. They found their method did reduce running cost and increased classification accuracy. 
 
-This paper discusses the use of different types of KNN in order to classify diabetes. It does this by using matlab and six different types of KNN algorithms to classify glucose concentrations in the blood. The paper starts of with an explanation of how KNN algorithms work by using the Euclidean distance between the different classes. The KNN algorithm takes the closes N number of neighbors and assigns the class based on the nearest neighbors. Out of the six algorithms that were used the fine KNN was the one that was the most successful at correctly classifying the data. [@ali2020diabetes]
+Another big impact on accuracy is the distance the model uses to classify neighbors. Although the euclidean distance is the default distance that is used in kNNs there are other distances that can be used. In the thesis [@kataria2013review] the authors compare different distances in classification algorithms with a focus on the kNN algorithm. It starts off explaining how the KNN algorithm uses the nearest k-neighbors in order to classify data points and then describes how the euclidean distance does this by putting a line segment between point a and point b and then measuring the distance using the euclidean distance formula. It moves on to describe the “cityblock” or taxican distance and describes it as “the sum of the length of the projections of the line segment”. It also describes the cosine distance and the correlation distance and then compares the performance of the default euclidean distance to the performance of using city block, cosine and correlation distances. In the end it found the euclidean distance was more efficient than the others in their observations. 
 
-- Summary of research paper: Efficient kNN Classification With Different
-Numbers of Nearest Neighbors
+Figuring out the distance can be a computationally expensive endeavor with bigger datasets. This can be a problem when we enter the world of big data where datasets can get very big and computationally prohibitive. Researchers are already trying to solve this problem by trying to make kNN’s more efficient. In the thesis [@deng2016efficient] the authors propose using a k-means clustering technique to separate big data dataset into several parts to make the KNN more efficient. This paper is so important because the traditional method of using the euclidean distance with big datasets to see what the k neighbors are can be time consuming and computationally expensive. After several experiments the authors concluded the LC-KNN they proposed worked the best because it had the highest accuracy and best time.[@deng2016efficient] 
 
-This paper proposes two more efficient KNN methods called the kTree and the k*Tree methods. The authors propose using a training stage using a decision tree to select the ideal number of K values to make the KNN more efficient. The authors found their method did reduce running cost and increased classification accuracy. [@zhang2017efficient]
+The advances in kNN research has led to more optimized models that can be accurate enough to be used in the field of healthcare. The thesis [@ali2020diabetes] discusses the use of different types of KNN in order to classify diabetes. The authors were able to successfully identify diabetes by using matlab and six different types of KNN algorithms to classify glucose concentrations in the blood. The KNN algorithm took the closest K number of neighbors and assigned the class based on the nearest neighbors. Out of the six algorithms that were used the fine KNN was the one that was the most successful at correctly classifying the data. [@ali2020diabetes]
 
-Week 3: 
-
-Summary of research paper: Diagnosis of Diabetes Mellitus using K Nearest Neighbor Algorithm
-
-The goal of this paper is to diagnose diabetes mellitus using KNN. This paper describes what diabetes mellitus is and the health problems it causes in individuals. This paper is important because it can lead doctors to use better detection tools to detect diabetes mellitus. This paper describes the way the KNN algorithm works in order to detect diabetes mellitus. The algorithm is described as taking a sample dataset with input variables and one output variable, taking a test dataset from the sample, finding the distance between each dataset in the training sample with the euclidean formula, then deciding the random variable of k where k is the number of nearest neighbors you will use to classify. Then it does the same thing to the test dataset and uses the K nearest members to find the output variable. After the classification, the authors go into detail of how they analyzed the results based on specificity. Finally, the paper describes the way they used mathlab to check for the accuracy of their results. The accuracy for a K of 3 was 70% and the accuracy for a K of 5 was 75%.  [@saxena2014diagnosis]
-
-Summary of research paper: Efficient kNN classification algorithm for big data
-
-
-The goal of this paper is to be able to use KNN in big data. This paper proposes using a k-means clustering technique to separate big data dataset into several parts to make the KNN more efficient. The reason this paper is important is because KNN traditionally work by measuring the euclidean distance between different datasets to see what the nearest k neighbors are and this can be computationally expensive with big datasets. The authors proposal would lead to a more efficient method of using knn. The authors concluded the LC-KNN worked the best because it had the highest accuracy and best time.[@deng2016efficient]
-
-
-Week 4: 
-
-A Review of Data Classification Using K-Nearest Neighbour Algorithm
-
-This paper focused on comparing different distances in classification algorithms with a focus on the KNN algorithm. It explains the methodology used in KNN. It states the KNN algorithm uses the nearest k-neighbors in order to classify data points. The paper states KNN uses the euclidean distance by default and it compares its performance using cityblock, cosine and correlation distances. In the end it found the euclidean distance was more efficient than the others. [@kataria2013review]
-
-Introduction to machine learning: k-nearest neighbors
-
-The author of this paper gave the reader an introduction into how KNN works and how to run it in R studio. He describes the methodology as assigning an unlabeled observation to a class by using labeled examples that are similar to it. It also describes the euclidean distance equation and offers alternatives to it like the Manhattan distance. The author also describes the impact the k has on the algorithm. It recommends setting the k equal to the square root of the number of observations in the training dataset. [@zhang2016introduction]
-
-The introduction should:
-
-
--   Develop a storyline that captures attention and maintains interest.
-
--   Your audience is your peers
-
--   Clearly state the problem or question you're addressing.
-
-<!-- -->
-
--   Introduce why it is relevant needs.
-
--   Provide an overview of your approach.
-
-Example of writing including citing references:
-
-*This is an introduction to ..... regression, which is a non-parametric
-estimator that estimates the conditional expectation of two variables
-which is random. The goal of a kernel regression is to discover the
-non-linear relationship between two random variables. To discover the
-non-linear relationship, kernel estimator or kernel smoothing is the
-main method to estimate the curve for non-parametric statistics. In
-kernel estimator, weight function is known as kernel function
-[@efr2008]. Cite this paper [@bro2014principal]. The GEE [@wang2014].
-The PCA [@daffertshofer2004pca]*. Topology can be used in machine learning [@adams2021topology]
-
-*This is my work and I want to add more work...*
+Another promising paper by  Saxena et al [@saxena2014diagnosis], showed the authors diagnosing diabetes mellitus using a KNN. The paper described diabetes mellitus and the variety of health problems it causes. This paper describes what diabetes mellitus is and the health problems it causes in individuals. The algorithm is described as taking a sample dataset with input variables and one output variable, taking a test dataset from the sample, finding the distance between each dataset in the training sample with the euclidean formula, then deciding the random variable of k where k is the number of nearest neighbors you will use to classify. Then it does the same thing to the test dataset and uses the K nearest members to find the output variable. After the classification, the authors go into detail of how they analyzed the results based on specificity. Finally, the paper describes the way they used mathlab to check for the accuracy of their results. The accuracy for a K of 3 was 70% and the accuracy for a K of 5 was 75%. 
 
 ## Methods
 
