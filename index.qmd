@@ -47,9 +47,11 @@ While KNN is simple and effective, it struggles with computational inefficiency 
 To address this, Deng et al. [@deng2016efficient] proposed an improved approach called LC-KNN, which combines K-means clustering with KNN to speed up computations and enhance accuracy. By dividing large datasets into smaller clusters, their method reduces the number of distance calculations needed. After extensive testing, the authors found that LC-KNN consistently outperformed standard KNN, achieving higher accuracy and better efficiency. Their study highlights a key limitation of traditional KNN (without optimization, its performance significantly declines on big data) and offers an effective solution to improve its scalability.
 
 Continuing and summarizing these ideas, Syriopoulos et al. [@syriopoulos2023k] explored techniques for accelerating KNN computations, such as:
-Dimensionality reduction (e.g., PCA, feature selection) to reduce data complexity.
-Approximate Nearest Neighbor (ANN) methods to speed up distance calculations.
-Hybrid models combining KNN with clustering (e.g., LC-KNN) to improve efficiency.
+
+- Dimensionality reduction (e.g., PCA, feature selection) to reduce data complexity.
+- Approximate Nearest Neighbor (ANN) methods to speed up distance calculations.
+- Hybrid models combining KNN with clustering (e.g., LC-KNN) to improve efficiency.
+
 This approach enhanced both speed and accuracy, making it a promising solution for handling large datasets. In addition, the study categorizes KNN modifications into local hyperplane methods, fuzzy-based models, weighting schemes, and hybrid approaches, demonstrating how these adaptations help tackle issues like class imbalance, computational inefficiency, and sensitivity to noise.
 
 Another key challenge for KNN is its performance in high-dimensional datasets. The 2023 study by Syriopoulos et al. evaluates multiple nearest neighbor search algorithms such as kd-trees, ball trees, Locality-Sensitive Hashing (LSH), and graph-based search methods that enable KNN performance scaling for larger datasets through minimized distance calculations.
@@ -82,9 +84,10 @@ Traditional methods often discard incomplete records, but KNN imputation preserv
 Research indicate that KNN works well for diabetes prediction, but recent studies demonstrate it doesn't consistently provide the best results. The study by Theerthagiri et al.  [@theerthagiri2022diagnosis] evaluated KNN against multiple machine learning models such as Naïve Bayes, Decision Trees, Extra Trees, Radial Basis Function (RBF), and Multi-Layer Perceptron (MLP) through analysis of the Pima Indians Diabetes dataset. The research indicated that KNN performed adequately but MLP excelled beyond all other algorithms achieving top accuracy at 80.68% and leading in AUC-ROC with an 86%. Despite its effectiveness in classification tasks, KNN's primary limitation is its inability to compete with advanced models like neural networks when processing complex datasets.
 
 In turn, Uddin et al.[@uddin2022comparative] explored advanced KNN variants, including Weighted KNN, Distance-Weighted KNN, and Ensemble KNN. Their findings suggest that:
-Weighted KNN improved classification by assigning greater importance to closer neighbors.
-Ensemble KNN outperformed standard KNN in disease prediction but required additional computational resources.
-Performance was highly sensitive to the choice of distance metric and K value tuning.
+
+- Weighted KNN improved classification by assigning greater importance to closer neighbors.
+- Ensemble KNN outperformed standard KNN in disease prediction but required additional computational resources.
+- Performance was highly sensitive to the choice of distance metric and K value tuning.
 
 Their findings suggest that KNN can be improved through modifications, but it remains highly sensitive to dataset size, feature selection, and distance metric choices. In large-scale healthcare applications, Decision Trees (DT) and ensemble models may offer better trade-offs between accuracy and efficiency.
 These studies highlight the ongoing debate over KNN’s role in medical classification - whether modifying KNN is the best approach or if other models, such as DT or ensemble learning, provide stronger performance for diagnosing diseases.
