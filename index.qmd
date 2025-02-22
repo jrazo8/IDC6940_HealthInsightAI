@@ -110,10 +110,6 @@ $$
 
 
 
--   Justify your choices based on the problem and data.
-
-
-
 ## Analysis and Results
 
 ### Data Exploration and Visualization
@@ -140,47 +136,29 @@ X = cdc_diabetes_health_indicators.data.features
 y = cdc_diabetes_health_indicators.data.targets 
   
 ```
-The dataset includes 253680 instances and has 21 feature variables and 1 binary target variable. 
+
+The following table displays the first few rows of the CDC Diabetes Health Indicators dataset. 
+```{python}
+#| echo: false
+import pandas as pd
+
+cdc_data_df = pd.concat([cdc_diabetes_health_indicators.data.features, 
+                         cdc_diabetes_health_indicators.data.targets], axis=1)
+
+cdc_data_df.to_csv("cdc_data.csv", index=False)
+```
+```{r, echo=FALSE}
+library(knitr)
+library(readr)
+
+cdc_data_df <- read_csv("cdc_data.csv")
+
+kable(head(cdc_data_df))
+```
+This dataset is a large dataset that includes 253680 instances and has 21 feature variables and 1 binary target variable. 
 ```{python}
 # variable information 
 print(cdc_diabetes_health_indicators.variables)
-```
-
-
-
--   Highlight unexpected patterns or anomalies.
-
-A study was conducted to determine how...
-
-```{r echo=T, message=FALSE, warning=FALSE}
-# loading packages 
-library(tidyverse)
-library(knitr)
-library(ggthemes)
-library(ggrepel)
-library(dslabs)
-
-
-```
-
-```{r, warning=FALSE, echo=TRUE}
-# Load Data
-kable(head(murders))
-
-ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total)) 
-
-  ggplot1 + geom_point(aes(col=region), size = 4) +
-  geom_text_repel(aes(label=abb)) +
-  scale_x_log10() +
-  scale_y_log10() +
-  geom_smooth(formula = "y~x", method=lm,se = F)+
-  xlab("Populations in millions (log10 scale)") + 
-  ylab("Total number of murders (log10 scale)") +
-  ggtitle("US Gun Murders in 2010") +
-  scale_color_discrete(name = "Region")+
-      theme_bw()
-  
-
 ```
 
 ### Modeling and Results
