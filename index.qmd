@@ -130,6 +130,29 @@ $$
 
 We explored the [CDC Diabetes Health Indicators](https://archive.ics.uci.edu/dataset/891/cdc+diabetes+health+indicators.) dataset which was sourced from the UC Irvine Machine Learning Repository. This dataset was funded by the CDC in order to get insights into lifestyle factors and their relationship to diabetes. The data was imported using python to install the ucimlrepo package. 
 
+```{r include= FALSE}
+library(reticulate)
+
+virtualenv_create("r-reticulate", python = "/usr/bin/python3")
+use_virtualenv("r-reticulate", required = TRUE)
+py_install(c("pandas", "ucimlrepo", "scipy", "scikit-learn"))
+
+```
+
+```{python}
+from ucimlrepo import fetch_ucirepo 
+  
+# fetch dataset 
+cdc_diabetes_health_indicators = fetch_ucirepo(id=891) 
+  
+# data (as pandas dataframes) 
+X = cdc_diabetes_health_indicators.data.features 
+y = cdc_diabetes_health_indicators.data.targets 
+  
+# variable information 
+print(cdc_diabetes_health_indicators.variables)
+```
+
 
 -   Present initial findings and insights through visualizations.
 
@@ -137,13 +160,15 @@ We explored the [CDC Diabetes Health Indicators](https://archive.ics.uci.edu/dat
 
 A study was conducted to determine how...
 
-```{r, warning=FALSE, echo=T, message=FALSE}
+```{r echo=T, message=FALSE, warning=FALSE}
 # loading packages 
 library(tidyverse)
 library(knitr)
 library(ggthemes)
 library(ggrepel)
 library(dslabs)
+
+
 ```
 
 ```{r, warning=FALSE, echo=TRUE}
