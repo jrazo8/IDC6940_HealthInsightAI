@@ -98,31 +98,21 @@ For our capstone project, exploring feature selection, fine-tuning KNN’s setti
 
 ## Methods
 
--   Detail the models or algorithms used.
+The kNN algorithm works on the assumption that similar data is close to each other in distance. It classifies a datapoint by using the euclidean distance formula to find the nearest k data specified. Once these k data points have been found, the kNN assigns a category to the new datapoint based off the category with the majority of the data points that are similar. [@zhang2016introduction]
+For example, the distance between two data points (X1, Y1) and (X2, Y2) would be calculated by the euclidean distance formula as follows [@theerthagiri2022diagnosis]: 
+
+$$
+d = \sqrt{(X_2 - X_1)^2 + (Y_2 - Y_1)^2}
+$$
+
+*Where $X_2 - X_1$ calculates the horizontal difference and $Y_2 - Y_1$ calculates the vertical difference. These two distances are then squared to ensure they are positive regardless of which directionality. Squaring the distances also gives greater emphasis to larger distances. 
+
+
+
 
 -   Justify your choices based on the problem and data.
 
-*The common non-parametric regression model is*
-$Y_i = m(X_i) + \varepsilon_i$*, where* $Y_i$ *can be defined as the sum
-of the regression function value* $m(x)$ *for* $X_i$*. Here* $m(x)$ *is
-unknown and* $\varepsilon_i$ *some errors. With the help of this
-definition, we can create the estimation for local averaging i.e.*
-$m(x)$ *can be estimated with the product of* $Y_i$ *average and* $X_i$
-*is near to* $x$*. In other words, this means that we are discovering
-the line through the data points with the help of surrounding data
-points. The estimation formula is printed below [@R-base]:*
 
-$$
-M_n(x) = \sum_{i=1}^{n} W_n (X_i) Y_i  \tag{1}
-$$$W_n(x)$ *is the sum of weights that belongs to all real numbers.
-Weights are positive numbers and small if* $X_i$ *is far from* $x$*.*
-
-
-*Another equation:*
-
-$$
-y_i = \beta_0 + \beta_1 X_1 +\varepsilon_i
-$$
 
 ## Analysis and Results
 
@@ -157,7 +147,6 @@ print(cdc_diabetes_health_indicators.variables)
 ```
 
 
--   Present initial findings and insights through visualizations.
 
 -   Highlight unexpected patterns or anomalies.
 
