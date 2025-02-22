@@ -161,7 +161,45 @@ This dataset is a large dataset that includes 253680 instances and has 21 featur
 print(cdc_diabetes_health_indicators.variables)
 ```
 
+
 ### Modeling and Results
+
+The ordinal categorical variables include age, education, income and GenHlth. We chose to keep them the same and not do one-hot-encoding because age, education and income had a natural order that had meaningful distances. For example, a bigger number for age or income indicated an older age or a higher income. The dataset also included BMI, MentHlth, and PhysHlth as continuous variables and we normalized them during the pre-processing step. 
+
+```{python}
+#import libraries
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+#Load dataset 
+cdc_diabetes_health_indicators = fetch_ucirepo(id=891)
+X = cdc_diabetes_health_indicators.data.features
+y = cdc_diabetes_health_indicators.data.targets
+
+#Normalize Continuous Variables
+cont_variables = ["BMI","MentHlth","PhysHlth"]
+scaler = StandardScaler()
+X[cont_variables]= scaler.fit_transform(X[cont_variables])
+
+#Split data into training and testing data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=100)
+
+# Initialize and train kNN
+knn_model = KNeighborsClassifier(n_neighbors=5, p=2, metric='minkowski')
+knn_model.fit(X_train, y_train)
+
+#Make classifications on testing data 
+y_predictions = knn_model.predict(X_test)
+
+# Evaluate model
+accuracy = accuracy_score(y_test, y_predictions)
+print(f"Accuracy of knn model: {accuracy * 100:.2f}%")
+
+```
 
 -   Explain your data preprocessing and cleaning steps.
 

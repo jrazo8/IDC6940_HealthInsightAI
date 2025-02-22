@@ -3601,6 +3601,398 @@ d = \sqrt{(X_2 - X_1)^2 + (Y_2 - Y_1)^2}
 </section>
 <section id="modeling-and-results" class="level3">
 <h3 class="anchored" data-anchor-id="modeling-and-results">Modeling and Results</h3>
+<p>The ordinal categorical variables include age, education, income and GenHlth. We chose to keep them the same and not do one-hot-encoding because age, education and income had a natural order that had meaningful distances. For example, a bigger number for age or income indicated an older age or a higher income. The dataset also included BMI, MentHlth, and PhysHlth as continuous variables and we normalized them during the pre-processing step.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import libraries</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.neighbors <span class="im">import</span> KNeighborsClassifier</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> accuracy_score</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Load dataset </span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>cdc_diabetes_health_indicators <span class="op">=</span> fetch_ucirepo(<span class="bu">id</span><span class="op">=</span><span class="dv">891</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> cdc_diabetes_health_indicators.data.features</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> cdc_diabetes_health_indicators.data.targets</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#Normalize Continuous Variables</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>cont_variables <span class="op">=</span> [<span class="st">&quot;BMI&quot;</span>,<span class="st">&quot;MentHlth&quot;</span>,<span class="st">&quot;PhysHlth&quot;</span>]</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>X[cont_variables]<span class="op">=</span> scaler.fit_transform(X[cont_variables])</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#Split data into training and testing data</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.30</span>, random_state<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize and train kNN</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>knn_model <span class="op">=</span> KNeighborsClassifier(n_neighbors<span class="op">=</span><span class="dv">5</span>, p<span class="op">=</span><span class="dv">2</span>, metric<span class="op">=</span><span class="st">&#39;minkowski&#39;</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>knn_model.fit(X_train, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<style>#sk-container-id-1 {
+
+--sklearn-color-text: #000;
+--sklearn-color-text-muted: #666;
+--sklearn-color-line: gray;
+
+--sklearn-color-unfitted-level-0: #fff5e6;
+--sklearn-color-unfitted-level-1: #f6e4d2;
+--sklearn-color-unfitted-level-2: #ffe0b3;
+--sklearn-color-unfitted-level-3: chocolate;
+
+--sklearn-color-fitted-level-0: #f0f8ff;
+--sklearn-color-fitted-level-1: #d4ebff;
+--sklearn-color-fitted-level-2: #b3dbfd;
+--sklearn-color-fitted-level-3: cornflowerblue;
+
+--sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+--sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));
+--sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+--sklearn-color-icon: #696969;
+@media (prefers-color-scheme: dark) {
+
+--sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+--sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));
+--sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+--sklearn-color-icon: #878787;
+}
+}
+#sk-container-id-1 {
+color: var(--sklearn-color-text);
+}
+#sk-container-id-1 pre {
+padding: 0;
+}
+#sk-container-id-1 input.sk-hidden--visually {
+border: 0;
+clip: rect(1px 1px 1px 1px);
+clip: rect(1px, 1px, 1px, 1px);
+height: 1px;
+margin: -1px;
+overflow: hidden;
+padding: 0;
+position: absolute;
+width: 1px;
+}
+#sk-container-id-1 div.sk-dashed-wrapped {
+border: 1px dashed var(--sklearn-color-line);
+margin: 0 0.4em 0.5em 0.4em;
+box-sizing: border-box;
+padding-bottom: 0.4em;
+background-color: var(--sklearn-color-background);
+}
+#sk-container-id-1 div.sk-container {
+
+display: inline-block !important;
+position: relative;
+}
+#sk-container-id-1 div.sk-text-repr-fallback {
+display: none;
+}
+div.sk-parallel-item,
+div.sk-serial,
+div.sk-item {
+
+background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
+background-size: 2px 100%;
+background-repeat: no-repeat;
+background-position: center center;
+}
+
+#sk-container-id-1 div.sk-parallel-item::after {
+content: "";
+width: 100%;
+border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
+flex-grow: 1;
+}
+#sk-container-id-1 div.sk-parallel {
+display: flex;
+align-items: stretch;
+justify-content: center;
+background-color: var(--sklearn-color-background);
+position: relative;
+}
+#sk-container-id-1 div.sk-parallel-item {
+display: flex;
+flex-direction: column;
+}
+#sk-container-id-1 div.sk-parallel-item:first-child::after {
+align-self: flex-end;
+width: 50%;
+}
+#sk-container-id-1 div.sk-parallel-item:last-child::after {
+align-self: flex-start;
+width: 50%;
+}
+#sk-container-id-1 div.sk-parallel-item:only-child::after {
+width: 0;
+}
+
+#sk-container-id-1 div.sk-serial {
+display: flex;
+flex-direction: column;
+align-items: center;
+background-color: var(--sklearn-color-background);
+padding-right: 1em;
+padding-left: 1em;
+}
+
+
+#sk-container-id-1 div.sk-toggleable {
+
+background-color: var(--sklearn-color-background);
+}
+
+#sk-container-id-1 label.sk-toggleable__label {
+cursor: pointer;
+display: flex;
+width: 100%;
+margin-bottom: 0;
+padding: 0.5em;
+box-sizing: border-box;
+text-align: center;
+align-items: start;
+justify-content: space-between;
+gap: 0.5em;
+}
+#sk-container-id-1 label.sk-toggleable__label .caption {
+font-size: 0.6rem;
+font-weight: lighter;
+color: var(--sklearn-color-text-muted);
+}
+#sk-container-id-1 label.sk-toggleable__label-arrow:before {
+
+content: "▸";
+float: left;
+margin-right: 0.25em;
+color: var(--sklearn-color-icon);
+}
+#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {
+color: var(--sklearn-color-text);
+}
+
+#sk-container-id-1 div.sk-toggleable__content {
+max-height: 0;
+max-width: 0;
+overflow: hidden;
+text-align: left;
+
+background-color: var(--sklearn-color-unfitted-level-0);
+}
+#sk-container-id-1 div.sk-toggleable__content.fitted {
+
+background-color: var(--sklearn-color-fitted-level-0);
+}
+#sk-container-id-1 div.sk-toggleable__content pre {
+margin: 0.2em;
+border-radius: 0.25em;
+color: var(--sklearn-color-text);
+
+background-color: var(--sklearn-color-unfitted-level-0);
+}
+#sk-container-id-1 div.sk-toggleable__content.fitted pre {
+
+background-color: var(--sklearn-color-fitted-level-0);
+}
+#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {
+
+max-height: 200px;
+max-width: 100%;
+overflow: auto;
+}
+#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
+content: "▾";
+}
+
+#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
+color: var(--sklearn-color-text);
+background-color: var(--sklearn-color-unfitted-level-2);
+}
+#sk-container-id-1 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+background-color: var(--sklearn-color-fitted-level-2);
+}
+
+
+#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
+
+background-color: var(--sklearn-color-unfitted-level-2);
+}
+#sk-container-id-1 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+
+background-color: var(--sklearn-color-fitted-level-2);
+}
+#sk-container-id-1 div.sk-label label.sk-toggleable__label,
+#sk-container-id-1 div.sk-label label {
+
+color: var(--sklearn-color-text-on-default-background);
+}
+
+#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {
+color: var(--sklearn-color-text);
+background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
+color: var(--sklearn-color-text);
+background-color: var(--sklearn-color-fitted-level-2);
+}
+
+#sk-container-id-1 div.sk-label label {
+font-family: monospace;
+font-weight: bold;
+display: inline-block;
+line-height: 1.2em;
+}
+#sk-container-id-1 div.sk-label-container {
+text-align: center;
+}
+
+#sk-container-id-1 div.sk-estimator {
+font-family: monospace;
+border: 1px dotted var(--sklearn-color-border-box);
+border-radius: 0.25em;
+box-sizing: border-box;
+margin-bottom: 0.5em;
+
+background-color: var(--sklearn-color-unfitted-level-0);
+}
+#sk-container-id-1 div.sk-estimator.fitted {
+
+background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-1 div.sk-estimator:hover {
+
+background-color: var(--sklearn-color-unfitted-level-2);
+}
+#sk-container-id-1 div.sk-estimator.fitted:hover {
+
+background-color: var(--sklearn-color-fitted-level-2);
+}
+
+
+.sk-estimator-doc-link,
+a:link.sk-estimator-doc-link,
+a:visited.sk-estimator-doc-link {
+float: right;
+font-size: smaller;
+line-height: 1em;
+font-family: monospace;
+background-color: var(--sklearn-color-background);
+border-radius: 1em;
+height: 1em;
+width: 1em;
+text-decoration: none !important;
+margin-left: 0.5em;
+text-align: center;
+
+border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+color: var(--sklearn-color-unfitted-level-1);
+}
+.sk-estimator-doc-link.fitted,
+a:link.sk-estimator-doc-link.fitted,
+a:visited.sk-estimator-doc-link.fitted {
+
+border: var(--sklearn-color-fitted-level-1) 1pt solid;
+color: var(--sklearn-color-fitted-level-1);
+}
+
+div.sk-estimator:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover,
+div.sk-label-container:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover {
+
+background-color: var(--sklearn-color-unfitted-level-3);
+color: var(--sklearn-color-background);
+text-decoration: none;
+}
+div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover,
+div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover {
+
+background-color: var(--sklearn-color-fitted-level-3);
+color: var(--sklearn-color-background);
+text-decoration: none;
+}
+
+.sk-estimator-doc-link span {
+display: none;
+z-index: 9999;
+position: relative;
+font-weight: normal;
+right: .2ex;
+padding: .5ex;
+margin: .5ex;
+width: min-content;
+min-width: 20ex;
+max-width: 50ex;
+color: var(--sklearn-color-text);
+box-shadow: 2pt 2pt 4pt #999;
+
+background: var(--sklearn-color-unfitted-level-0);
+border: .5pt solid var(--sklearn-color-unfitted-level-3);
+}
+.sk-estimator-doc-link.fitted span {
+
+background: var(--sklearn-color-fitted-level-0);
+border: var(--sklearn-color-fitted-level-3);
+}
+.sk-estimator-doc-link:hover span {
+display: block;
+}
+/* "?"-specific style due to the `<a>` HTML tag */
+
+#sk-container-id-1 a.estimator_doc_link {
+  float: right;
+  font-size: 1rem;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1rem;
+  height: 1rem;
+  width: 1rem;
+  text-decoration: none;
+  /* unfitted */
+  color: var(--sklearn-color-unfitted-level-1);
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+}
+
+#sk-container-id-1 a.estimator_doc_link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+#sk-container-id-1 a.estimator_doc_link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+#sk-container-id-1 a.estimator_doc_link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+}
+</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>KNeighborsClassifier()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked><label for="sk-estimator-id-1" class="sk-toggleable__label fitted sk-toggleable__label-arrow"><div><div>KNeighborsClassifier</div></div><div><a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.6/modules/generated/sklearn.neighbors.KNeighborsClassifier.html">?<span>Documentation for KNeighborsClassifier</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></div></label><div class="sk-toggleable__content fitted"><pre>KNeighborsClassifier()</pre></div> </div></div></div></div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Make classifications on testing data </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>y_predictions <span class="op">=</span> knn_model.predict(X_test)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate model</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>accuracy <span class="op">=</span> accuracy_score(y_test, y_predictions)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Accuracy of knn model: </span><span class="sc">{</span>accuracy <span class="op">*</span> <span class="dv">100</span><span class="sc">:.2f}</span><span class="ss">%&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Accuracy of knn model: 84.75%</code></pre>
+</div>
+</div>
 <ul>
 <li><p>Explain your data preprocessing and cleaning steps.</p></li>
 <li><p>Present your key findings in a clear and concise manner.</p></li>
