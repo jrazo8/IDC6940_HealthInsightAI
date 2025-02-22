@@ -128,7 +128,7 @@ $$
 
 ### Data Exploration and Visualization
 
-We explored the [CDC Diabetes Health Indicators](https://archive.ics.uci.edu/dataset/891/cdc+diabetes+health+indicators.) dataset which was sourced from the UC Irvine Machine Learning Repository. This dataset was funded by the CDC in order to get insights into lifestyle factors and their relationship to diabetes. The data was imported using python to install the ucimlrepo package. 
+We explored the [CDC Diabetes Health Indicators](https://archive.ics.uci.edu/dataset/891/cdc+diabetes+health+indicators.) dataset which was sourced from the UC Irvine Machine Learning Repository. This dataset was funded by the CDC in order to get insights into lifestyle factors and their relationship to diabetes. The data was imported using python code to install the ucimlrepo package. We used the import instructions listed on the UCI website. 
 
 ```{r include= FALSE}
 library(reticulate)
@@ -149,6 +149,9 @@ cdc_diabetes_health_indicators = fetch_ucirepo(id=891)
 X = cdc_diabetes_health_indicators.data.features 
 y = cdc_diabetes_health_indicators.data.targets 
   
+```
+The dataset includes 253680 instances and has 21 feature variables and 1 binary target variable. 
+```{python}
 # variable information 
 print(cdc_diabetes_health_indicators.variables)
 ```
