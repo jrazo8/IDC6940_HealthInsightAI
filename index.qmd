@@ -105,7 +105,7 @@ $$
 d = \sqrt{(X_2 - X_1)^2 + (Y_2 - Y_1)^2}
 $$
 
-*Where $X_2 - X_1$ calculates the horizontal difference and $Y_2 - Y_1$ calculates the vertical difference. These two distances are then squared to ensure they are positive regardless of which directionality. Squaring the distances also gives greater emphasis to larger distances. 
+*Where $X_2 - X_1$ calculates the horizontal difference and $Y_2 - Y_1$ calculates the vertical difference. These two distances are then squared to ensure they are positive regardless of which directionality. Squaring the distances also gives greater emphasis to larger distances.* 
 
 
 
