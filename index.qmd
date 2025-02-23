@@ -154,11 +154,7 @@ cdc_data_df <- read_csv("cdc_data.csv")
 
 kable(head(cdc_data_df))
 ```
-This dataset is a large dataset that includes 253680 instances and has 21 feature variables and 1 binary target variable. 
-```{python}
-# variable information 
-print(cdc_diabetes_health_indicators.variables)
-```
+This dataset is a large dataset that includes 253,680 instances. There are no nulls or missing data but there are 24,206 duplicate rows. These duplicates should be analyzed to determine whether they need removal or weighting to prevent redundancy in model training.
 
 ```{python}
 #| echo: false
@@ -192,6 +188,59 @@ exploratory_df <- read_csv("eda.csv")
 kable(exploratory_df)
 ```
 
+The dataset includes 21 feature variables and 1 binary target variable. 
+```{python}
+# variable information 
+print(cdc_diabetes_health_indicators.variables)
+```
+
+#### Statistical Properties
+```{python}
+df_stats= cdc_data_df.describe()
+df_stats
+```
+#### Key Findings from EDA
+
+**Class Imbalance:**
+
+Only 13.9% of people have diabetes, which suggests an imbalance in the target variable. This may require oversampling (SMOTE) or class weighting when training models.
+
+**BMI and High Blood Pressure are Major Health Concerns:**
+
+- The average BMI is 28.38, close to the overweight range. 
+- 43% of the population has high blood pressure, which is a known risk factor for diabetes.
+
+
+```{r include= FALSE}
+reticulate::py_install(c("matplotlib", "seaborn", "pandas"))
+```
+
+```{python, echo: FALSE, message= FALSE, warning= FALSE}
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+target_variable = "Diabetes_binary" if "Diabetes_binary" in cdc_data_df.columns else None
+
+## Plot BMI Distribution**
+plt.figure(figsize=(8, 5))
+sns.histplot(cdc_data_df["BMI"], bins=50, kde=True, color="blue")
+plt.title("BMI Distribution")
+plt.xlabel("BMI")
+plt.ylabel("Count")
+plt.show()
+```
+
+
+**Physical Activity and Diet Indicators:**
+
+- 75% of individuals engage in regular physical activity. 
+- 81% eat vegetables regularly, and 63% eat fruits regularly, suggesting generally healthy dietary habits.
+
+**Age and Income Influence Health Outcomes:**
+
+- Older individuals are more likely to develop diabetes. 
+- Higher income groups tend to report better health, which may correlate with healthcare access.
 
 ### Modeling and Results
 
