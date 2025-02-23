@@ -109,7 +109,6 @@ $$
 
 
 
-
 ## Analysis and Results
 
 ### Data Exploration and Visualization
@@ -161,6 +160,38 @@ This dataset is a large dataset that includes 253680 instances and has 21 featur
 print(cdc_diabetes_health_indicators.variables)
 ```
 
+```{python}
+#| echo: false
+import pandas as pd
+from ucimlrepo import fetch_ucirepo 
+  
+# fetch dataset 
+cdc_diabetes_health_indicators = fetch_ucirepo(id=891) 
+  
+# data (as pandas dataframes) 
+X = cdc_diabetes_health_indicators.data.features 
+y = cdc_diabetes_health_indicators.data.targets 
+
+cdc_data_df = pd.concat([cdc_diabetes_health_indicators.data.features, 
+                         cdc_diabetes_health_indicators.data.targets], axis=1)
+                         
+exploratory_data_analysis = { "Exploratory Data Analysis": ["Number of Nulls", "Missing Data", "Duplicate Rows", "Total Rows"], "Count": [cdc_data_df.isna().sum().sum(), (cdc_data_df == " ").sum().sum(), cdc_data_df.duplicated().sum(), cdc_data_df.shape[0]]}
+
+exploratory_data_analysis_df=pd.DataFrame(exploratory_data_analysis)
+
+exploratory_data_analysis_df.to_csv("eda.csv", index=False)
+
+```
+
+```{r, echo=FALSE}
+library(knitr)
+library(readr)
+
+exploratory_df <- read_csv("eda.csv")
+
+kable(exploratory_df)
+```
+
 
 ### Modeling and Results
 
@@ -208,10 +239,6 @@ print(f"Accuracy of knn model: {accuracy * 100:.2f}%")
 -   Use visuals to support your claims.
 
 -   **Tell a story about what the data reveals.**
-
-```{r}
-
-```
 
 ### Conclusion
 
