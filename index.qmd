@@ -111,9 +111,9 @@ $$
 
 ## Analysis and Results
 
-### Data Exploration and Visualization
+#### 1. Data Exploration 
 
-We explored the [CDC Diabetes Health Indicators](https://archive.ics.uci.edu/dataset/891/cdc+diabetes+health+indicators.) dataset which was sourced from the UC Irvine Machine Learning Repository. This dataset was funded by the CDC in order to get insights into lifestyle factors and their relationship to diabetes. The data was imported using python code to install the ucimlrepo package. We used the import instructions listed on the UCI website. 
+We explored the [CDC Diabetes Health Indicators](https://archive.ics.uci.edu/dataset/891/cdc+diabetes+health+indicators.) dataset, sourced from the UC Irvine Machine Learning Repository. This dataset was funded by the Centers for Disease Control and Prevention (CDC) to provide insights into lifestyle factors and their relationship with diabetes. The data was imported using Python and the ucimlrepo package, following the recommended instructions on the UCI website.
 
 
 ```{r, include= FALSE}
@@ -130,11 +130,14 @@ py_install(c("pandas", "ucimlrepo", "scipy", "scikit-learn"))
 
 ```
 
-## Loading the dataset
+**1.1 Dataset Overview**
+
+The dataset comprises 253,680 instances and 22 variables, including 21 feature variables and 1 binary target variable (Diabetes_binary). The target variable indicates whether an individual has prediabetes or diabetes (1) or does not (0).
 
 ```{python}
 from ucimlrepo import fetch_ucirepo 
-  
+
+# Loading the dataset  
 # fetch dataset 
 cdc_diabetes_health_indicators = fetch_ucirepo(id=891) 
   
@@ -143,6 +146,89 @@ X = cdc_diabetes_health_indicators.data.features
 y = cdc_diabetes_health_indicators.data.targets 
   
 ```
+
+**Variable Classification & Encoding**
+
+Provides a clear overview of how many variables exist in each type. The dataset includes a mix of binary, ordinal, and continuous variables, structured as follows:
+
+***1 Target Variable (Diabetes_binary):*** Indicates diabetes status (0 = No, 1 = Yes)
+
+***14 Binary Variables:*** HighBP, HighChol, CholCheck, Smoker, Stroke, HeartDiseaseorAttack, PhysActivity, Fruits, Veggies, HvyAlcoholConsump, AnyHealthcare, NoDocbcCost, DiffWalk, Sex
+(All encoded as: 0 = No, 1 = Yes, except Sex: 0 = Female, 1 = Male)
+
+***6 Ordinal Variables:*** GenHlth, MentHlth, PhysHlth, Age, Education, Income, encoded as numerical ranks to maintain meaningful order.
+
+***1 Continuous Variable (BMI):*** A numeric measure of body mass index.
+
+
+**Data Encoding & Categorization**
+
+To facilitate analysis, categorical variables were numerically encoded:
+
+*Ordinal Variables* (Age, Education, Income): Higher values correspond to higher progression in age, education, or income level.
+
+*Health-Related Variables* (GenHlth, MentHlth, PhysHlth): Represent self-reported health status or the number of unhealthy days.
+
+*Binary Variables* (HighBP, HighChol, CholCheck, Smoker, Stroke, HeartDiseaseorAttack, PhysActivity, Fruits, Veggies, HvyAlcoholConsump, AnyHealthcare, NoDocbcCost, DiffWalk, Sex): Encoded as 0 = No, 1 = Yes (except Sex: 0 = Female, 1 = Male) for clarity in analysis.
+
+*Target Variable* (Diabetes_binary): Encoded as 0 = No diabetes, 1 = Diabetes or prediabetes for classification tasks.
+
+The table below provides a detailed breakdown of all variables by type, description, and range of values.
+
+
+```{r}
+
+# Load necessary packages
+library(knitr)
+
+# Create a Data Frame with Variable Information
+table_data <- data.frame(
+  Type = c(
+    "Target",
+    "Binary", "", "", "", "", "", "", "", "", "", "", "", "", "",
+    "Ordinal", "", "", "", "", "",
+    "Continuous"
+  ),
+  Variable = c(
+    "Diabetes_binary",
+    "HighBP", "HighChol", "CholCheck", "Smoker", "Stroke", "HeartDiseaseorAttack", 
+    "PhysActivity", "Fruits", "Veggies", "HvyAlcoholConsump", "AnyHealthcare", 
+    "NoDocbcCost", "DiffWalk", "Sex",
+    "GenHlth", "MentHlth", "PhysHlth", "Age", "Education", "Income",
+    "BMI"
+  ),
+  Description = c(
+    "Indicates whether a person has diabetes",
+    "High Blood Pressure", "High Cholesterol", "Cholesterol check in the last 5 years",
+    "Smoked at least 100 cigarettes in lifetime", "Had a stroke", "History of heart disease or attack",
+    "Engaged in physical activity in the last 30 days", "Regular fruit consumption", 
+    "Regular vegetable consumption", "Heavy alcohol consumption", "Has health insurance or healthcare access",
+    "Could not see a doctor due to cost", "Difficulty walking/climbing stairs", "Biological sex",
+    "Self-reported general health (1=Excellent, 5=Poor)", 
+    "Number of mentally unhealthy days in last 30 days", "Number of physically unhealthy days in last 30 days",
+    "Age Groups (1 = 18-24, ..., 13 = 80+)", 
+    "Highest education level (1 = No school, ..., 6 = College graduate)", 
+    "Household income category (1 = <$10K, ..., 8 = $75K+)", 
+    "Body Mass Index (BMI), measure of body fat"
+  ),
+  Range = c(
+    "(0 = No, 1 = Yes)",
+    "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)",
+    "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", 
+    "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", 
+    "(0 = No, 1 = Yes)", "(0 = Female, 1 = Male)",
+    "(1 = Excellent, ..., 5 = Poor)", "(0 - 30)", "(0 - 30)", 
+    "(1 = 18-24, ..., 13 = 80+)", "(1 = No school, ..., 6 = College grad)", 
+    "(1 = <$10K, ..., 8 = $75K+)", "(12 - 98)"
+  )
+)
+
+# Print Table with knitr::kable()
+kable(table_data, caption = "Summary of Explanatory Variables", align = "l")
+
+
+```
+
 
 The following table displays the first few rows of the CDC Diabetes Health Indicators dataset. 
 
@@ -167,56 +253,7 @@ cdc_data_df <- read_csv("cdc_data.csv")
 kable(head(cdc_data_df))
 ```
 
-This dataset is a large dataset that includes 253680 instances and has 21 feature variables and 1 binary target variable.
-
-## Variable information
-
-```{python}
-
-# variable information 
-print(cdc_diabetes_health_indicators.variables)
-```
-This table categorizes and summarizes all explanatory variables in the dataset.
-
-```{r}
-# Load necessary packages
-library(knitr)
-
-# Create a Data Frame with Variable Information
-table_data <- data.frame(
-  Type = c("Target", rep("Binary", 14), rep("Ordinal", 6), "Continuous"),
-  Variable = c("Diabetes_binary", "HighBP", "HighChol", "CholCheck", "Smoker", 
-               "Stroke", "HeartDiseaseorAttack", "PhysActivity", "Fruits", "Veggies", 
-               "HvyAlcoholConsump", "AnyHealthcare", "NoDocbcCost", "DiffWalk", "Sex",
-               "GenHlth", "MentHlth", "PhysHlth", "Age", "Education", "Income", "BMI"),
-  Description = c("Indicates whether a person has diabetes", 
-                  "High Blood Pressure", "High Cholesterol", "Cholesterol check in the last 5 years",
-                  "Smoked at least 100 cigarettes in lifetime", "Had a stroke", "History of heart disease or attack",
-                  "Engaged in physical activity in the last 30 days", "Regular fruit consumption", 
-                  "Regular vegetable consumption", "Heavy alcohol consumption", "Has health insurance or healthcare access",
-                  "Could not see a doctor due to cost", "Difficulty walking/climbing stairs", "Biological sex",
-                  "Self-reported general health (1=Excellent, 5=Poor)", 
-                  "Number of mentally unhealthy days in last 30 days", "Number of physically unhealthy days in last 30 days",
-                  "Age Groups (1 = 18-24, ..., 13 = 80+)", 
-                  "Highest education level (1 = No school, ..., 6 = College graduate)", 
-                  "Household income category (1 = <$10K, ..., 8 = $75K+)", 
-                  "Body Mass Index (BMI), measure of body fat"),
-  Range = c("(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", 
-            "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", 
-            "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", 
-            "(0 = No, 1 = Yes)", "(0 = No, 1 = Yes)", "(0 = Female, 1 = Male)",
-            "(1 = Excellent, ..., 5 = Poor)", "(0 - 30)", "(0 - 30)", 
-            "(1 = 18-24, ..., 13 = 80+)", "(1 = No school, ..., 6 = College grad)", 
-            "(1 = <$10K, ..., 8 = $75K+)", "(12 - 98)")
-)
-
-# Print Table with knitr::kable()
-kable(table_data, caption = "Summary of Explanatory Variables", align = "l")
-
-```
-
-
-## Exploratory Data Analysis (EDA)
+### 1.2 Exploratory Data Analysis (EDA)
 
 ```{python}
 #| echo: false
@@ -241,7 +278,9 @@ exploratory_data_analysis_df.to_csv("eda.csv", index=False)
 
 ```
 
-### Checking for Missing Values, Duplicates, and Data Issues
+**Checking for Missing Values, Duplicates, and Data Issues**
+
+In this step, we checked for null values, missing data (NaNs), and duplicate rows to ensure data integrity. Additionally, we identified columns with invalid values such as strings with spaces in numeric fields.
 
 ```{r, include= TRUE}
 library(knitr)
@@ -256,13 +295,16 @@ kable(exploratory_df)
 The dataset contains no missing values, but 24,206 duplicate rows were detected. These duplicates should be analyzed to determine whether they need removal or weighting to prevent redundancy in model training.
 
 
-#### Statistical Properties
+**Statistical Properties**
+
+A statistical summary of the dataset’s features will be presented to illustrate the distribution, mean values, and variance of key health indicators. This will help in identifying potential data imbalances and highlight features that may require preprocessing, such as scaling or encoding.
+
 ```{python}
 df_stats= cdc_data_df.describe()
 df_stats
 ```
 
-#### Key Findings from EDA
+##### Key Findings from EDA
 
 **Class Imbalance:**
 
@@ -283,7 +325,7 @@ Only 13.9% of people have diabetes, which suggests an imbalance in the target va
 - Older individuals are more likely to develop diabetes. 
 - Higher income groups tend to report better health, which may correlate with healthcare access.
 
-## Visualizations for Exploration
+#### 2. Visualizations for Exploration
 
 The goal of visualization in exploratory data analysis (EDA) is to understand feature distributions, detect potential issues such as class imbalance and outliers, and identify relationships between variables. This helps in making informed decisions about data preprocessing, feature selection, and model improvements before training machine learning models.
 
@@ -293,37 +335,44 @@ py_install(c("matplotlib", "seaborn"))
 
 ```
 
+##### 2.1 Testing for imbalance
 
-## Plot BMI Distribution
+Checking the balance of the target variable (Diabetes)is crucial because it helps determine whether class imbalance is an issue. 
+
+**Observations:**
+
+The dataset exhibits a significant class imbalance, with the majority class (No Diabetes = 0) greatly outnumbering the minority class (Diabetes/Prediabetes = 1). 
+
+This imbalance can lead to biased model predictions, favoring the dominant class while under-detecting diabetes cases. 
+
+To address this, techniques such as oversampling (SMOTE) or undersampling should be considered to improve classification performance.
 
 ```{python}
 
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-target_variable = "Diabetes_binary" if "Diabetes_binary" in cdc_data_df.columns else None
+# Define the target variable
+target_variable = "Diabetes_binary"
 
-## Plot BMI Distribution**
-plt.figure(figsize=(8, 5))
-sns.histplot(cdc_data_df["BMI"], bins=50, kde=True, color="blue")
-plt.title("BMI Distribution")
-plt.xlabel("BMI")
-plt.ylabel("Count")
-plt.show()
+# Check if the target variable exists in the dataframe
+if target_variable in cdc_data_df.columns:
+    plt.figure(figsize=(6, 4))
+    sns.countplot(x=cdc_data_df[target_variable], palette="Set2")
+    plt.title(f"Class Distribution of {target_variable}")
+    plt.xlabel("Diabetes Status (0 = No, 1 = Diabetes/Prediabetes)")
+    plt.ylabel("Count")
+    plt.show()
+else:
+    print("No target variable detected. Please confirm which column represents diabetes.")
+
 
 ```
-**Observations:**
 
-The BMI distribution is right-skewed, with most values concentrated around 25–30 (overweight category). 
-
-There are extreme BMI values (above 60), which may need further examination. 
-
-Given the skewness, feature transformation or normalization could be beneficial for model performance.
-
-
-## Checked Numerical Feature Correlation
+##### 2.2 Checked Numerical Feature Correlation
 
 The correlation heatmap helps identify strongly correlated features, which may lead to redundancy in the model.
+
 
 ```{python}
 
@@ -342,116 +391,36 @@ plt.show()
 
 ```
 
+**Key Positive Correlations:**
+
+•	*General Health (GenHlth) is strongly correlated with Physical Health (PhysHlth)* (0.52) and *Difficulty Walking (DiffWalk)* (0.45).
+
+As individuals report poorer general health, they experience more physical health issues and mobility limitations.
+
+•	*Physical Health (PhysHlth) and Difficulty Walking (DiffWalk)* (0.47) show a strong link.
+Those with more days of poor physical health are likely to struggle with mobility.
+
+•	*Age* correlates with *High Blood Pressure* (0.34) and *High Cholesterol* (0.27),
+indicating an increased risk of cardiovascular conditions as people get older.
+
+•	*Mental Health (MentHlth) and Physical Health (PhysHlth)* (0.34) are positively associated.
+Worsening mental health often coincides with physical health problems.
+
+**Key Negative Correlations:**
+
+•	Higher *Income* is associated with better *General Health* (-0.33), fewer *Mobility Issues* (-0.30), and better *Physical Health* (-0.24).
+
+This suggests financial stability improves access to healthcare and promotes a healthier lifestyle.
+
+•	Higher *Education* is linked to better *General Health* (-0.28) and *Mental Health* (-0.19).
+Educated individuals may have better health awareness and coping strategies.
+
 **Observations:**
 
-*Age, General Health (GenHlth)*, and *DiffWalk* show the strongest correlation with Diabetes_binary, suggesting these are significant predictors of diabetes.
-
-*BMI* has a moderate correlation with *Diabetes_binary*, indicating it plays a role but is not the strongest predictor.
-
-*HighBP* and *HighChol* still show some correlation with diabetes, but their impact appears weaker than before.
-
-*GenHlth, MentHlth*, and *PhysHlth* have strong intercorrelations, which may indicate redundancy in the dataset.
-
-*Education* and *Income* exhibit mild correlation with *Age*, which may suggest an indirect influence on health outcomes.
-
-## Checking the balance of the target variable (Diabetes)
-
-is crucial because it helps determine whether class imbalance is an issue.
-
-```{python}
-
-##  Class Distribution of Target Variable (Diabetes_binary)**
-if target_variable:
-    plt.figure(figsize=(6, 4))
-    sns.countplot(x=cdc_data_df[target_variable], palette="Set2")
-    plt.title(f"Class Distribution of {target_variable}")
-    plt.xlabel("Diabetes Status (0 = No, 1 = Diabetes/Prediabetes)")
-    plt.ylabel("Count")
-    plt.show()
-else:
-    print("No target variable detected. Please confirm which column represents diabetes.")
+The heatmap confirms well-known health trends: age, high blood pressure, and cholesterol are major risk factors for diabetes. Poor physical and mental health are strongly related, and socioeconomic status (income, education) plays a key role in overall health. These insights highlight the importance of early intervention strategies and lifestyle modifications to prevent chronic diseases like diabetes.
 
 
-```
-**Observations:**
-
-The dataset exhibits a significant class imbalance, with the majority class (No Diabetes = 0) greatly outnumbering the minority class (Diabetes/Prediabetes = 1). 
-
-This imbalance can lead to biased model predictions, favoring the dominant class while under-detecting diabetes cases. 
-
-To address this, techniques such as oversampling (SMOTE) or undersampling should be considered to improve classification performance.
-
-
-## "BMI Distribution by Diabetes Status"
-
-
-```{python}
-
-## Boxplot of BMI by Diabetes Status**
-if target_variable:
-    plt.figure(figsize=(8, 5))
-    sns.boxplot(x=cdc_data_df[target_variable], y=cdc_data_df["BMI"], palette="Set3")
-    plt.title("BMI Distribution by Diabetes Status")
-    plt.xlabel("Diabetes Status (0 = No, 1 = Diabetes/Prediabetes)")
-    plt.ylabel("BMI")
-    plt.show()
-
-```
-**Observations:**
-
-The BMI distribution is similar across diabetes statuses, with diabetic individuals showing a slightly higher median BMI. 
-
-Outliers exist in both groups, particularly in severely obese individuals. 
-
-While BMI is a known risk factor, additional features such as age, cholesterol, and physical activity should be analyzed to improve diabetes prediction.
-
-## Histograms the distribution of values
-
-```{python}
-import matplotlib.pyplot as plt
-
-# Ensure the dataframe is loaded correctly
-if 'cdc_data_df' in globals():
-    df = cdc_data_df  # Assign the dataset
-else:
-    raise ValueError("Dataset 'cdc_data_df' is not defined. Please check your variable name.")
-
-# Number of columns in the dataset
-num_columns = len(df.columns)
-
-# Calculate the number of rows needed (3 histograms per row)
-num_rows = (num_columns // 3) + (num_columns % 3 > 0)  
-
-# Create subplots
-fig, axes = plt.subplots(num_rows, 3, figsize=(15, num_rows * 4))
-axes = axes.flatten()  # Flatten to a 1D array for easy iteration
-
-# Plot histograms for each numerical column
-for i, col in enumerate(df.columns):
-    if df[col].dtype in ['int64', 'float64']:  # Ensure only numeric columns are plotted
-        axes[i].hist(df[col], bins=20, color='seagreen', edgecolor='black')
-        axes[i].set_title(col, fontsize=10)
-        axes[i].set_xlabel('Values')
-        axes[i].set_ylabel('Frequency')
-    else:
-        axes[i].remove()  # Remove plot if column is not numerical
-
-# Remove extra unused subplots
-for j in range(i + 1, len(axes)):
-    fig.delaxes(axes[j])
-
-plt.tight_layout()
-plt.show()
-
-```
-**Observations:**
-
-Based on the distribution in *DiffWalk, GenHlth, MentHlth*, apparently our cases are relatively healthy.
-Even though half of them are smokers and a third don't do any physical activity.
-
-Most of our cases are well *Educated* and have a fairly distributed income (almost).
-
-## Age Distribution by Diabetes Status
+##### 2.3 Age Distribution by Diabetes Status
 
 This boxplot illustrates the relationship between age and diabetes status (0 = No Diabetes, 1 = Diabetes/Prediabetes).
 
@@ -476,8 +445,6 @@ plt.ylabel("Age")
 plt.show()
 
 ```
-**Observations:**
-
 Individuals with diabetes/prediabetes (1) tend to be older than those without.
 
 The median age is noticeably higher in the diabetes group.
@@ -488,104 +455,45 @@ Outliers in both groups indicate that some younger individuals also develop diab
 
 This visualization supports the well-established link between aging and diabetes risk, reinforcing the importance of early monitoring in older populations.
 
-## Income vs Diabetes Status Plot
+
+##### 2.4 General Health vs Diabetes Status Plot
+
+This bar chart visualizes the distribution of self-reported general health (GenHlth) among individuals with and without diabetes/prediabetes.
 
 ```{python}
 
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Ensure Diabetes_binary column is of integer type for proper hue mapping
-cdc_data_df['Diabetes_binary'] = cdc_data_df['Diabetes_binary'].astype(int)
+# Ensure Diabetes_binary column is integer type for hue mapping
+if 'Diabetes_binary' in cdc_data_df.columns:
+    cdc_data_df['Diabetes_binary'] = cdc_data_df['Diabetes_binary'].astype(int)
 
-# Define color mapping for diabetes status (as integers)
+# Ensure GenHlth column is categorical with the correct order
+if 'GenHlth' in cdc_data_df.columns:
+    cdc_data_df['GenHlth'] = cdc_data_df['GenHlth'].astype(int)
+
+# Define color mapping ensuring keys match hue values (0 and 1)
 palette_colors = {0: "mediumaquamarine", 1: "gold"}
 
-# Create the countplot
+# Create the countplot with hue_order to ensure correct mapping
 plt.figure(figsize=(10, 5))
-sns.countplot(x='Income', hue='Diabetes_binary', data=cdc_data_df, palette=palette_colors)
+sns.countplot(x='GenHlth', hue='Diabetes_binary', data=cdc_data_df, 
+              palette=palette_colors, hue_order=[0, 1])
 
 # Add labels and title
-plt.title('Income vs Diabetes Status', fontsize=16)
-plt.xlabel('Income Level', fontsize=14)
-plt.ylabel('Count', fontsize=14)
-plt.xticks(rotation=45)
+plt.title("General Health vs Diabetes Status", fontsize=16)
+plt.xlabel("General Health (Self-Reported)", fontsize=14)
+plt.ylabel("Count", fontsize=14)
+plt.xticks(rotation=0)  # Ensure labels are horizontal for clarity
 
-# Add legend with correct labels
-plt.legend(title='Diabetes Status', labels=["No Diabetes (0)", "Diabetes/Prediabetes (1)"])
+# Ensure legend is displayed correctly
+plt.legend(title="Diabetes Status (0 = No, 1 = Diabetes/Prediabetes)")
 
 # Show the plot
 plt.show()
 
-
 ```
-
-**Observations:**
-
-The analysis explored the relationship between income levels and diabetes prevalence. 
-
-The countplot indicates that the majority of individuals belong to higher income categories and are non-diabetic.
-
-Diabetes cases, although present, remain consistently lower across all income levels. 
-
-While there appears to be a socioeconomic factor, further statistical testing is required to determine the strength of the association.
-
-## Education vs Diabetes Status Plot
-
-```{python}
-
-# Define color palette for diabetes status
-palette_colors = {0: "mediumaquamarine", 1: "gold"}
-
-# Create the count plot
-plt.figure(figsize=(10, 5))
-sns.countplot(x="Education", hue="Diabetes_binary", data=cdc_data_df, palette=palette_colors)
-
-# Add labels and title
-plt.title("Education vs Diabetes Status", fontsize=16)
-plt.xlabel("Education Level", fontsize=14)
-plt.ylabel("Count", fontsize=14)
-plt.xticks(rotation=45)
-plt.legend(title="Diabetes Status", labels=["No Diabetes (0)", "Diabetes/Prediabetes (1)"])
-
-# Show plot
-plt.show()
-
-
-```
-**Observations:**
-
-The visualization of Education vs. Diabetes Status suggests that individuals with lower education levels may have a slightly higher proportion of diabetes cases. However, since the total number of individuals per category varies significantly, further statistical tests may be needed to confirm any correlation.
-
-
-## General Health vs Diabetes Status Plot
-
-This bar chart visualizes the distribution of self-reported general health (GenHlth) among individuals with and without diabetes/prediabetes.
-
-```{python}
-
-# Define colors explicitly for diabetes status
-palette_colors = {0: "mediumaquamarine", 1: "gold"}
-
-# Create the countplot
-plt.figure(figsize=(10, 5))
-sns.countplot(x="GenHlth", hue="Diabetes_binary", data=cdc_data_df, 
-              palette=palette_colors)
-
-# Add title and labels
-plt.title("General Health vs Diabetes Status", fontsize=16)
-plt.xlabel("General Health (Self-Reported)", fontsize=14)
-plt.ylabel("Count", fontsize=14)
-plt.xticks(rotation=45)
-
-# Add legend
-plt.legend(title="Diabetes Status (0 = No, 1 = Diabetes/Prediabetes)")
-
-# Show plot
-plt.show()
-
-```
-**Observations:**
 
 *General trend:*
 
@@ -600,9 +508,38 @@ As general health worsens (higher values), the proportion of individuals with di
 The majority of the dataset consists of individuals without diabetes (green bars), which aligns with the dataset imbalance previously observed.
 
 
-## BMI Density Plot by Diabetes Status
+##### 2.5 BMI Distribution by Diabetes Status
+
+```{python}
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Define the target variable
+target_variable = "Diabetes_binary"
+
+# Ensure that target_variable is in the dataframe
+if target_variable in cdc_data_df.columns:
+    plt.figure(figsize=(8, 5))
+    sns.boxplot(x=target_variable, y="BMI", data=cdc_data_df, 
+                hue=target_variable, palette="Set3", legend=False)
+    
+    plt.title("BMI Distribution by Diabetes Status")
+    plt.xlabel("Diabetes Status (0 = No, 1 = Diabetes/Prediabetes)")
+    plt.ylabel("BMI")
+    plt.show()
+else:
+    print("Target variable not found in dataset.")
+
+```
+
+The BMI distribution is similar across diabetes statuses, with diabetic individuals showing a slightly higher median BMI. 
+
+Outliers exist in both groups, particularly in severely obese individuals. 
+
+##### 2.6 BMI Density Plot by Diabetes Status
 
 This KDE (Kernel Density Estimate) plot visualizes the distribution of BMI values for individuals with and without diabetes (or prediabetes).
+
 ```{python}
 
 # Set figure size
@@ -625,8 +562,6 @@ plt.legend(title='Diabetes Status')
 plt.show()
 
 ```
-**Observations:**
-
 *BMI and Diabetes Relationship:*
 
 People with diabetes generally have higher BMI values compared to those without diabetes.
@@ -637,9 +572,11 @@ A larger proportion of the diabetic population has BMI values above 30, which al
 
 Although there is some overlap between the two distributions, the diabetic group's density shifts slightly right, meaning individuals with diabetes tend to have a higher BMI on average.
 
+**Observations:**
 
+While BMI is a known risk factor for diabetes, this plot suggests that BMI alone is not a strong distinguishing factor, as there is a significant overlap between the two groups. Although individuals with diabetes tend to have slightly higher BMI values, other health and lifestyle factors, such as age, cholesterol levels, and physical activity, should be analyzed to improve diabetes prediction and gain a more comprehensive understanding of its risk factors.
 
-### Modeling and Results
+### 3. Modeling and Results
 
 The ordinal categorical variables include age, education, income and GenHlth. We chose to keep them the same and not do one-hot-encoding because age, education and income had a natural order that had meaningful distances. For example, a bigger number for age or income indicated an older age or a higher income. The dataset also included BMI, MentHlth, and PhysHlth as continuous variables and we normalized them during the pre-processing step. 
 
@@ -688,9 +625,6 @@ print("\nClassification Report:")
 print(classification_report(y_test, y_pred))
 
 ```
-
-
-
 
 ## Commentary on kNN Model Results
 
