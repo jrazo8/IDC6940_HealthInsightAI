@@ -3341,32 +3341,34 @@ window.Quarto = {
 <figcaption>Figure 1</figcaption>
 </figure>
 </div>
-<section id="classification-process" class="level4">
-<h4 class="anchored" data-anchor-id="classification-process">Classification process</h4>
-<p>The classification process has three distinct steps:</p>
-<ol type="1">
-<li>Distance calculation</li>
-</ol>
+<section id="classification-process" class="level3">
+<h3 class="anchored" data-anchor-id="classification-process">Classification process</h3>
+<section id="the-classification-process-has-three-distinct-steps" class="level4">
+<h4 class="anchored" data-anchor-id="the-classification-process-has-three-distinct-steps">The classification process has three distinct steps:</h4>
+</section>
+<section id="distance-calculation" class="level4">
+<h4 class="anchored" data-anchor-id="distance-calculation">1. Distance calculation</h4>
 <p>The knn first measures the distance between the datapoint it’s trying to classify and all the training points. There are different calculation methods that can be used but the default and most commonly used method with the kNN is the euclidean distance formula. <span class="citation" data-cites="theerthagiri2022diagnosis">(<a href="#ref-theerthagiri2022diagnosis" role="doc-biblioref">Theerthagiri, Ruby, and Vidya 2022</a>)</span>:</p>
 <p><span class="math display">\[
 d = \sqrt{(X_2 - X_1)^2 + (Y_2 - Y_1)^2}
 \]</span></p>
 <p><em>Where <span class="math inline">\(X_2 - X_1\)</span> calculates the horizontal difference and <span class="math inline">\(Y_2 - Y_1\)</span> calculates the vertical difference. These two distances are then squared to ensure they are positive regardless of which directionality it has. Squaring the distances also gives greater emphasis to larger distances.</em></p>
-<ol start="2" type="1">
-<li>Neighbor Selection</li>
-</ol>
+</section>
+<section id="neighbor-selection" class="level4">
+<h4 class="anchored" data-anchor-id="neighbor-selection">2. Neighbor Selection</h4>
 <p>The kNN allows the selection of a parameter k that is used by the algorithm to choose how many neighbors will be used to classify the unknown datapoint. The k parameter is very important as a k parameter that is too large can lead to a bias caused by a large amount of samples overwhelming a small number of samples and if k is too small then it will not use a large number of training samples. <span class="citation" data-cites="mucherino2009k">(<a href="#ref-mucherino2009k" role="doc-biblioref">Mucherino et al. 2009</a>)</span>. Studies recommend using cross-validation or heuristic methods, such as setting k to the square root of the dataset size, to determine an optimal value <span class="citation" data-cites="syriopoulos2023k">(<a href="#ref-syriopoulos2023k" role="doc-biblioref">Syriopoulos et al. 2023</a>)</span>.</p>
-<ol start="3" type="1">
-<li>Classification decision based on majority voting</li>
-</ol>
+</section>
+<section id="classification-decision-based-on-majority-voting" class="level4">
+<h4 class="anchored" data-anchor-id="classification-decision-based-on-majority-voting">3. Classification decision based on majority voting</h4>
 <p>Once the k-nearest neighbors are identified, the algorithm assigns the new data point the most frequent class label among its neighbors. In cases of ties, distance-weighted voting can be applied, where closer neighbors have higher influence on the classification decision <span class="citation" data-cites="uddin2022comparative">(<a href="#ref-uddin2022comparative" role="doc-biblioref">Uddin et al. 2022</a>)</span>.</p>
 </section>
-<section id="assumptions" class="level4">
-<h4 class="anchored" data-anchor-id="assumptions">Assumptions</h4>
+</section>
+<section id="assumptions" class="level3">
+<h3 class="anchored" data-anchor-id="assumptions">Assumptions</h3>
 <p>The kNN algorithm calculates the euclidean distance between the unknown datapoint and the testing datapoints because it assumes similar datapoints will be in close proximity to each other and be neighbors and that data points with similar features belong to the same class. <span class="citation" data-cites="boateng2020basic">(<a href="#ref-boateng2020basic" role="doc-biblioref"><strong>boateng2020basic?</strong></a>)</span></p>
 </section>
-<section id="advantages-and-limitations" class="level4">
-<h4 class="anchored" data-anchor-id="advantages-and-limitations">Advantages and Limitations</h4>
+<section id="advantages-and-limitations" class="level3">
+<h3 class="anchored" data-anchor-id="advantages-and-limitations">Advantages and Limitations</h3>
 <p>One of the advantages of the kNN is it’s easy to understand and implement and has great accuracy. A serious limitation it has is it can struggle and be slower when the number of datapoints gets too large as is the case with big data. The kNN takes a significant amount of time calculating the distances between at the datapoints in a big file. <span class="citation" data-cites="deng2016efficient">(<a href="#ref-deng2016efficient" role="doc-biblioref">Deng et al. 2016</a>)</span></p>
 </section>
 </section>
