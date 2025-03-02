@@ -677,17 +677,6 @@ The macro average (which treats both classes equally) is much lower than the wei
 This confirms that the model is performing well overall but poorly for detecting diabetes cases.
 
 
-
-### Template 
-
--   Explain your data preprocessing and cleaning steps.
-
--   Present your key findings in a clear and concise manner.
-
--   Use visuals to support your claims.
-
--   **Tell a story about what the data reveals.**
-
 ### Conclusion
 
 -   Summarize your key findings.
