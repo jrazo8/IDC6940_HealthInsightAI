@@ -108,12 +108,53 @@ The kNN algorithm works on the assumption that similar data is close to each oth
 
 #### 1. Distance calculation
 
-The knn first measures the distance between the datapoint it's trying to classify and all the training points. There are different calculation methods that can be used but the default and most commonly used method with the kNN is the euclidean distance formula. [@theerthagiri2022diagnosis]: 
+The knn first measures the distance between the datapoint it's trying to classify and all the training points. There are different calculation methods that can be used but the default and most commonly used method with the kNN is the Euclidean distance formula. [@theerthagiri2022diagnosis]: 
 
 $$
 d = \sqrt{(X_2 - X_1)^2 + (Y_2 - Y_1)^2}
 $$
 
+```{r} 
+library(ggplot2)
+
+#Add points (X1, Y1) and (X2, Y2)
+X1 <- 10; Y1 <- 12
+X2 <- 14; Y2 <- 16
+
+#creates a plot
+plot(c(X1, X2), c(Y1, Y2), type = "n", xlab = "X-axis", ylab = "Y-axis", main = "Figure 2: Euclidean Distance",xlim = c(X1 - 4, X2 + 4), ylim = c(Y1 - 4, Y2 + 4))
+
+#Plot first point
+points(X1, Y1, col = "red", pch = 16, cex = 2) 
+
+#Plot second point
+points(X2, Y2, col = "blue", pch = 16, cex = 2)
+
+#Add horizontal line
+segments(X1, Y1, X2, Y1, col = "green", lwd = 2)
+
+#Add vertical line 
+segments(X2, Y1, X2, Y2, col = "green", lwd = 2)
+
+#Add hypotenuse line
+segments(X1, Y1, X2, Y2, col = "purple", lwd = 2, lty = 2)
+
+#Add labels
+text(X1, Y1, labels = paste("(X1, Y1)\n(", X1, ",", Y1, ")"), pos = 2, col = "red", cex = 0.7) 
+text(X2, Y2, labels = paste("(X2, Y2)\n(", X2, ",", Y2, ")"), pos = 4, col = "blue", cex = 0.7)
+text((X1 + X2) / 2 -2, (Y1 + Y2) / 2 + 3, "Euclidean Distance (d)", col = "purple", font = 2, cex = 1.2)
+arrows((X1 + X2) / 2, (Y1 + Y2) / 2 + 2,(X1 + X2) / 2, (Y1 + Y2) / 2,col = "purple", lwd = 2, length = 0.1)
+
+#insert formula
+text(mean(c(X1, X2)), mean(c(Y1, Y2)) -5, 
+     labels = expression(d == sqrt((14 - 10)^2 + (16 - 12)^2)), 
+     col = "black", cex = 0.9, font = 1)
+
+text(mean(c(X1, X2)), mean(c(Y1, Y2)) -5, 
+     labels = expression(d == sqrt((14 - 10)^2 + (16 - 12)^2)), 
+     col = "black", cex = 0.9, font = 1)
+
+```
 *Where $X_2 - X_1$ calculates the horizontal difference and $Y_2 - Y_1$ calculates the vertical difference. These two distances are then squared to ensure they are positive regardless of which directionality it has. Squaring the distances also gives greater emphasis to larger distances.* 
 
 #### 2. Neighbor Selection 
@@ -123,6 +164,29 @@ The kNN allows the selection of a parameter k that is used by the algorithm to c
 #### 3. Classification decision based on majority voting 
 
 Once the k-nearest neighbors are identified, the algorithm assigns the new data point the most frequent class label among its neighbors. In cases of ties, distance-weighted voting can be applied, where closer neighbors have higher influence on the classification decision [@uddin2022comparative].
+
+```{r} 
+library(ggplot2)
+library(gganimate)
+
+# Create a dataset for animation
+df <- data.frame(
+  x = c(2, 4, 6, 8, 10),
+  y = c(3, 5, 7, 9, 11),
+  class = factor(c("A", "B", "A", "B", "A")),
+  step = c(1, 2, 2, 3, 3) # Different steps for animation
+)
+
+# Create an animated classification plot
+p <- ggplot(df, aes(x, y, color = class)) +
+  geom_point(size = 5) +
+  labs(title = "Step: {closest_state}") +
+  transition_states(step, transition_length = 2, state_length = 1)
+
+# Save or render the animation
+animate(p, renderer = gifski_renderer("classification_steps.gif"))
+
+```
 
 ### Assumptions 
 
