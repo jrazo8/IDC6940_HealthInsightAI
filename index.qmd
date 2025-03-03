@@ -98,7 +98,7 @@ For our capstone project, exploring feature selection, fine-tuning kNN’s setti
 
 ## Methods
 
-The kNN algorithm works on the assumption that similar data is close to each other in distance. It classifies a datapoint by using the euclidean distance formula to find the nearest k data specified. Once these k data points have been found, the kNN assigns a category to the new datapoint based off the category with the majority of the data points that are similar. [@zhang2016introduction]. Figure 1 illustrates this methodology with two distinct classes of hearts and circles. The knn algorithm is attempting to classify the mystery figure represented by the red square. The k parameter is set to k=5 which means the algorithm will use the euclidean distance formula to find the 5 nearest neighbors illustrated by the green circle. From here the algorithm simply counts the number from each class and designates the class that represents the majority which in this case is a heart. 
+The kNN algorithm is a nonparametric supervised learning algorithm that can be used for classification or regression problems. [@syriopoulos2023k] In classification, it works on the assumption that similar data is close to each other in distance. It classifies a datapoint by using the euclidean distance formula to find the nearest k data specified. Once these k data points have been found, the kNN assigns a category to the new datapoint based off the category with the majority of the data points that are similar. [@zhang2016introduction]. Figure 1 illustrates this methodology with two distinct classes of hearts and circles. The knn algorithm is attempting to classify the mystery figure represented by the red square. The k parameter is set to k=5 which means the algorithm will use the euclidean distance formula to find the 5 nearest neighbors illustrated by the green circle. From here the algorithm simply counts the number from each class and designates the class that represents the majority which in this case is a heart. 
 
 ![Figure 1](images/kNN_picture.png){width=400 height=400}
 
@@ -108,12 +108,11 @@ The kNN algorithm works on the assumption that similar data is close to each oth
 
 #### 1. Distance calculation
 
-The knn first measures the distance between the datapoint it's trying to classify and all the training points. There are different calculation methods that can be used but the default and most commonly used method with the kNN is the Euclidean distance formula. [@theerthagiri2022diagnosis]: 
+The knn first measures the distance between the datapoint it's trying to classify and all the training data points. There are different distance calculation methods that can be used but the default and most commonly used method with the kNN is the Euclidean distance formula. [@theerthagiri2022diagnosis]: 
 
 $$
 d = \sqrt{(X_2 - X_1)^2 + (Y_2 - Y_1)^2}
 $$
-
 ```{r} 
 library(ggplot2)
 
@@ -155,38 +154,16 @@ text(mean(c(X1, X2)), mean(c(Y1, Y2)) -5,
      col = "black", cex = 0.9, font = 1)
 
 ```
-*Where $X_2 - X_1$ calculates the horizontal difference and $Y_2 - Y_1$ calculates the vertical difference. These two distances are then squared to ensure they are positive regardless of which directionality it has. Squaring the distances also gives greater emphasis to larger distances.* 
+*Figure 2 shows the euclidean distance formula where $X_2 - X_1$ calculates the horizontal difference and $Y_2 - Y_1$ calculates the vertical difference. These two distances are then squared to ensure they are positive regardless of which directionality it has. Squaring the distances also gives greater emphasis to larger distances.* 
 
 #### 2. Neighbor Selection 
 
-The kNN allows the selection of a parameter k that is used by the algorithm to choose how many neighbors will be used to classify the unknown datapoint. The k parameter is very important as a k parameter that is too large can lead to a bias caused by a large amount of samples overwhelming a small number of samples and if k is too small then it will not use a large number of training samples. [@mucherino2009k]. Studies recommend using cross-validation or heuristic methods, such as setting k to the square root of the dataset size, to determine an optimal value [@syriopoulos2023k].
+The kNN allows the selection of a parameter k that is used by the algorithm to choose how many neighbors will be used to classify the unknown datapoint. The k parameter is very important as a k parameter that is too large can lead to a classification problem caused by a majority of the samples creating a bias and causing underfitting. [@mucherino2009k] A k being too small can cause the algorithm to be too sensitive to noise and outliers which can cause overfitting. Studies recommend using cross-validation or heuristic methods, such as setting k to the square root of the dataset size, to determine an optimal value [@syriopoulos2023k].
 
 #### 3. Classification decision based on majority voting 
 
 Once the k-nearest neighbors are identified, the algorithm assigns the new data point the most frequent class label among its neighbors. In cases of ties, distance-weighted voting can be applied, where closer neighbors have higher influence on the classification decision [@uddin2022comparative].
 
-```{r} 
-library(ggplot2)
-library(gganimate)
-
-# Create a dataset for animation
-df <- data.frame(
-  x = c(2, 4, 6, 8, 10),
-  y = c(3, 5, 7, 9, 11),
-  class = factor(c("A", "B", "A", "B", "A")),
-  step = c(1, 2, 2, 3, 3) # Different steps for animation
-)
-
-# Create an animated classification plot
-p <- ggplot(df, aes(x, y, color = class)) +
-  geom_point(size = 5) +
-  labs(title = "Step: {closest_state}") +
-  transition_states(step, transition_length = 2, state_length = 1)
-
-# Save or render the animation
-animate(p, renderer = gifski_renderer("classification_steps.gif"))
-
-```
 
 ### Assumptions 
 
@@ -195,7 +172,7 @@ The kNN algorithm calculates the euclidean distance between the unknown datapoin
 
 ### Advantages and Limitations 
 
-One of the advantages of the kNN is it's easy to understand and implement and has great accuracy. A serious limitation it has is it can struggle and be slower when the number of datapoints gets too large as is the case with big data. The kNN takes a significant amount of time calculating the distances between at the datapoints in a big file. [@deng2016efficient]
+One of the advantages of the kNN is it's easy to understand and implement. It is able to maintain great accuracy even with noisy data. [@syriopoulos2023k]. A serious limitation it has is the high computational cost and that it needs a large amount of memory to calculate the distance between all the datapoints.The kNN also has low accuracy with multidimensional data that has irrelevant features. [@saxena2014diagnosis]. Having to calculate the distance for all the datapoints can cause the knn to be slower when the number of datapoints gets too large as is the case with big data. The kNN takes a significant amount of time calculating the distances between at the datapoints in a big file. [@deng2016efficient]. 
 
 
 ## Analysis and Results
@@ -715,7 +692,7 @@ print(classification_report(y_test, y_pred))
 
 ```
 
-## Commentary on kNN Model Results
+### Commentary on kNN Model Results
 
 *1. Overall Accuracy*
 
@@ -741,7 +718,7 @@ The macro average (which treats both classes equally) is much lower than the wei
 This confirms that the model is performing well overall but poorly for detecting diabetes cases.
 
 
-### Conclusion
+## Conclusion
 
 -   Summarize your key findings.
 
