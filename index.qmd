@@ -179,7 +179,11 @@ One of the advantages of the kNN is it's easy to understand and implement. It is
 
 #### 1. Data Exploration 
 
-We explored the [CDC Diabetes Health Indicators](https://archive.ics.uci.edu/dataset/891/cdc+diabetes+health+indicators.) dataset, sourced from the UC Irvine Machine Learning Repository. This dataset was funded by the Centers for Disease Control and Prevention (CDC) to provide insights into lifestyle factors and their relationship with diabetes. The data was imported using Python and the ucimlrepo package, following the recommended instructions on the UCI website.
+We explored the [CDC Diabetes Health Indicators](https://archive.ics.uci.edu/dataset/891/cdc+diabetes+health+indicators.) dataset, sourced from the UC Irvine Machine Learning Repository. It is a set of data that was gathered by the Centers for Disease Control and Prevention (CDC) through the Behavioral Risk Factor Surveillance System (BRFSS), which is one of the biggest continuous health surveys in the United States.
+
+The BRFSS is an annual telephone survey that has been ongoing since 1984 and each year, more than 400,000 Americans respond to the survey. It provides important data on health behaviors, chronic diseases, and preventive health care use to help researchers and policymakers understand the health status and risks of the public.
+
+To transfer the data we used Python and the ucimlrepo package import the dataset directly from the UCI Machine Learning Repository, following the recommended instructions. This enabled us to easily save, prepare, and analyze the data in view of the current research.
 
 
 ```{r, include= FALSE}
@@ -196,9 +200,26 @@ py_install(c("pandas", "ucimlrepo", "scipy", "scikit-learn"))
 
 ```
 
-**1.1 Dataset Overview**
+**Dataset Overview**
 
-The dataset comprises 253,680 instances and 22 variables, including 21 feature variables and 1 binary target variable (Diabetes_binary). The target variable indicates whether an individual has prediabetes or diabetes (1) or does not (0).
+The dataset consists of 253,680 survey responses and contains 22 variables, including:
+
+•	1 target variable (Diabetes_binary): A binary classification indicating diabetes status (0 = No, 1 = Yes, including prediabetes).
+
+•	21 feature variables representing demographic, behavioral, and health-related attributes.
+
+The dataset includes a mix of categorical, ordinal, and continuous variables, covering factors such as:
+
+•	Demographics: Age, Sex, Income, Education
+
+•	Health conditions: High Blood Pressure, High Cholesterol, Stroke, Heart Disease
+
+•	Lifestyle factors: Smoking, Physical Activity, Diet
+
+•	Self-reported health status: General Health, Mental Health, Physical Health
+
+This dataset provides a large-scale representation of diabetes-related risk factors, making it valuable for exploratory data analysis, statistical modeling, and machine learning applications aimed at improving diabetes risk assessment and prevention strategies.
+
 
 ```{python}
 from ucimlrepo import fetch_ucirepo 
@@ -213,34 +234,39 @@ y = cdc_diabetes_health_indicators.data.targets
   
 ```
 
-**Variable Classification & Encoding**
+**Feature Overview & Data Encoding**
 
-Provides a clear overview of how many variables exist in each type. The dataset includes a mix of binary, ordinal, and continuous variables, structured as follows:
+The dataset consists of four types of variables:
 
-***1 Target Variable (Diabetes_binary):*** Indicates diabetes status (0 = No, 1 = Yes)
+***1. Target Variable (1)*** 
 
-***14 Binary Variables:*** HighBP, HighChol, CholCheck, Smoker, Stroke, HeartDiseaseorAttack, PhysActivity, Fruits, Veggies, HvyAlcoholConsump, AnyHealthcare, NoDocbcCost, DiffWalk, Sex
-(All encoded as: 0 = No, 1 = Yes, except Sex: 0 = Female, 1 = Male)
+Diabetes_binary: Binary classification (0 = No diabetes, 1 = Diabetes/prediabetes).
 
-***6 Ordinal Variables:*** GenHlth, MentHlth, PhysHlth, Age, Education, Income, encoded as numerical ranks to maintain meaningful order.
+***2. Binary Variables (14)*** 
 
-***1 Continuous Variable (BMI):*** A numeric measure of body mass index.
+Encoded as 0 = No, 1 = Yes (except Sex: 0 = Female, 1 = Male):
 
+Health Conditions: HighBP, HighChol, CholCheck, Stroke, HeartDiseaseorAttack
 
-**Data Encoding & Categorization**
+Lifestyle Factors: Smoker, PhysActivity, Fruits, Veggies, HvyAlcoholConsump
 
-To facilitate analysis, categorical variables were numerically encoded:
+Healthcare Access & Mobility: AnyHealthcare, NoDocbcCost, DiffWalk, Sex
 
-*Ordinal Variables* (Age, Education, Income): Higher values correspond to higher progression in age, education, or income level.
+***Ordinal Variables (6)***
 
-*Health-Related Variables* (GenHlth, MentHlth, PhysHlth): Represent self-reported health status or the number of unhealthy days.
+Encoded as numerical ranks to preserve meaningful order:
 
-*Binary Variables* (HighBP, HighChol, CholCheck, Smoker, Stroke, HeartDiseaseorAttack, PhysActivity, Fruits, Veggies, HvyAlcoholConsump, AnyHealthcare, NoDocbcCost, DiffWalk, Sex): Encoded as 0 = No, 1 = Yes (except Sex: 0 = Female, 1 = Male) for clarity in analysis.
+Self-Reported Health Status: GenHlth, MentHlth, PhysHlth
 
-*Target Variable* (Diabetes_binary): Encoded as 0 = No diabetes, 1 = Diabetes or prediabetes for classification tasks.
+Demographics: Age, Education, Income
+
+Higher values indicate progression (e.g., older age groups, higher education levels, or higher income brackets).
+
+***Continuous Variable (1)*** 
+
+BMI: Numeric variable representing Body Mass Index.
 
 The table below provides a detailed breakdown of all variables by type, description, and range of values.
-
 
 ```{r}
 
@@ -344,7 +370,7 @@ exploratory_data_analysis_df.to_csv("eda.csv", index=False)
 
 ```
 
-**Checking for Missing Values, Duplicates, and Data Issues**
+#### Checking for Missing Values, Duplicates, and Data Issues
 
 In this step, we checked for null values, missing data (NaNs), and duplicate rows to ensure data integrity. Additionally, we identified columns with invalid values such as strings with spaces in numeric fields.
 
@@ -357,20 +383,23 @@ exploratory_df <- read_csv("eda.csv")
 kable(exploratory_df)
 ```
 
+***Key Findings:***
 
-The dataset contains no missing values, but 24,206 duplicate rows were detected. These duplicates should be analyzed to determine whether they need removal or weighting to prevent redundancy in model training.
+There are no missing values, meaning no imputation is needed.
+
+24,206 duplicate records were detected, which need to be be analyzed to determine whether they need removal or weighting to prevent redundancy in model training.
 
 
-**Statistical Properties**
+#### Statistical Properties
 
-A statistical summary of the dataset’s features will be presented to illustrate the distribution, mean values, and variance of key health indicators. This will help in identifying potential data imbalances and highlight features that may require preprocessing, such as scaling or encoding.
+A statistical summary of the dataset’s features provides insights into distribution patterns, central tendencies (mean, median), and variance among key health indicators. This analysis helps identify potential imbalances, outliers, and preprocessing needs, such as scaling or encoding, to ensure optimal model performance.
 
 ```{python}
 df_stats= cdc_data_df.describe()
 df_stats
 ```
 
-##### Key Findings from EDA
+***Key Findings from Statistical Summary:***
 
 **Class Imbalance:**
 
@@ -391,7 +420,7 @@ Only 13.9% of people have diabetes, which suggests an imbalance in the target va
 - Older individuals are more likely to develop diabetes. 
 - Higher income groups tend to report better health, which may correlate with healthcare access.
 
-#### 2. Visualizations for Exploration
+### 2. Visualizations for Exploration
 
 The goal of visualization in exploratory data analysis (EDA) is to understand feature distributions, detect potential issues such as class imbalance and outliers, and identify relationships between variables. This helps in making informed decisions about data preprocessing, feature selection, and model improvements before training machine learning models.
 
@@ -573,8 +602,9 @@ As general health worsens (higher values), the proportion of individuals with di
 
 The majority of the dataset consists of individuals without diabetes (green bars), which aligns with the dataset imbalance previously observed.
 
+##### 2.5 BMI Distribution and Density Analysis by Diabetes Status
 
-##### 2.5 BMI Distribution by Diabetes Status
+BMI is a known risk factor for diabetes, and the analysis confirms that individuals with diabetes tend to have slightly higher BMI values on average. The KDE (Kernel Density Estimate) plot visualizes the distribution of BMI values for individuals with and without diabetes (or prediabetes).
 
 ```{python}
 import matplotlib.pyplot as plt
@@ -595,19 +625,7 @@ if target_variable in cdc_data_df.columns:
     plt.show()
 else:
     print("Target variable not found in dataset.")
-
-```
-
-The BMI distribution is similar across diabetes statuses, with diabetic individuals showing a slightly higher median BMI. 
-
-Outliers exist in both groups, particularly in severely obese individuals. 
-
-##### 2.6 BMI Density Plot by Diabetes Status
-
-This KDE (Kernel Density Estimate) plot visualizes the distribution of BMI values for individuals with and without diabetes (or prediabetes).
-
-```{python}
-
+    
 # Set figure size
 plt.figure(figsize=(10, 6))
 
@@ -628,19 +646,34 @@ plt.legend(title='Diabetes Status')
 plt.show()
 
 ```
-*BMI and Diabetes Relationship:*
+The analysis of BMI distribution across individuals with and without diabetes highlights some key trends:
 
-People with diabetes generally have higher BMI values compared to those without diabetes.
-The density plot suggests that a higher BMI is associated with an increased likelihood of diabetes.
-A larger proportion of the diabetic population has BMI values above 30, which aligns with known medical research that obesity is a major risk factor for diabetes.
+***1. General BMI Trends:***
 
-*Overlap of the Two Distributions:*
+Diabetic individuals tend to have a slightly higher median BMI compared to non-diabetic individuals.
 
-Although there is some overlap between the two distributions, the diabetic group's density shifts slightly right, meaning individuals with diabetes tend to have a higher BMI on average.
+A significant portion of diabetic individuals have a BMI above 30, aligning with known research that obesity is a major risk factor for diabetes.
 
-**Observations:**
+***2. Presence of Outliers:***
 
-While BMI is a known risk factor for diabetes, this plot suggests that BMI alone is not a strong distinguishing factor, as there is a significant overlap between the two groups. Although individuals with diabetes tend to have slightly higher BMI values, other health and lifestyle factors, such as age, cholesterol levels, and physical activity, should be analyzed to improve diabetes prediction and gain a more comprehensive understanding of its risk factors.
+Both groups contain extreme BMI values, particularly in the severely obese range.
+
+These extreme values may disproportionately affect model performance and should be further investigated.
+
+If necessary, outlier removal or transformation techniques (e.g., log transformation, winsorization) could be applied to maintain dataset balance.
+
+***3. BMI and Diabetes Relationship:***
+
+The KDE density plot reveals that while individuals with diabetes generally have higher BMI values, the overall distribution still shows overlap between the two groups.
+
+The density shift towards higher BMI values (above 30) for diabetic individuals suggests an association between obesity and diabetes risk.
+
+***4. Overlap Between Groups:***
+
+Despite the observed trends, BMI alone does not serve as a strong distinguishing factor for diabetes, as there is a significant overlap in distributions.
+
+Other factors, such as age, cholesterol levels, and physical activity, should also be considered to improve the predictive accuracy of diabetes risk assessment.
+
 
 ### 3. Modeling and Results
 
