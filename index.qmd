@@ -995,17 +995,6 @@ fpr_knn, tpr_knn, _ = roc_curve(y_test, y_test_proba_knn)
 #### Logistic Regression (Use SMOTE)
 
 
-```{python, echo=FALSE}
-print("Checking if new_df exists before Logistic Regression:")
-try:
-    print(new_df.shape)
-    print(new_df.head())  # Display first few rows
-except NameError as e:
-    print(f"Error: {e}")
-
-```
-
-
 
 ```{python}
 
@@ -1096,15 +1085,28 @@ print("\nClassification Report:\n", classification_report(y_test, y_pred))
 
 ### Code Implementation Comparison
 
-```{r}
-# Load necessary libraries
-library(dplyr)
+```{r, echo=FALSE}
+options(repos = c(CRAN = "https://cran.rstudio.com/")) # Set CRAN mirror
+install.packages("fastmap", dependencies=TRUE)
+install.packages("kableExtra", dependencies=TRUE)
 
-# Create a data frame with model performance metrics
+```
+
+```{r, echo=FALSE}
+install.packages("fastmap")
+install.packages("kableExtra")
+
+```
+
+
+```{r}
+library(kableExtra)
+
+# Create DataFrame
 model_metrics <- data.frame(
   Model = c("KNN (Before SMOTE)", "KNN (After SMOTE)", "KNN (Feature Selection)", 
             "Logistic Regression", "Decision Tree (After SMOTE)", "Decision Tree (Before SMOTE)", "Random Forest (Before SMOTE)"),
-  Applied_SMOTE = c("No", "Yes", "Yes", "Yes", "Yes", "No", "No"),  # Indicating SMOTE application
+  Applied_SMOTE = c("No", "Yes", "Yes", "Yes", "Yes", "No", "No"),  
   Accuracy = c(0.8325, 0.7620, 0.7545, 0.7253, 0.8486, 0.8486, 0.8539),
   ROC_AUC = c(0.7046, 0.8337, 0.8261, 0.8022, 0.7941, 0.7941, 0.8126),
   Precision_0 = c(0.87, 0.81, 0.80, 0.73, 0.86, 0.86, 0.86),
@@ -1113,10 +1115,12 @@ model_metrics <- data.frame(
   Recall_1 = c(0.21, 0.84, 0.83, 0.74, 0.15, 0.15, 0.13)
 )
 
-# Print table in a basic format without extra dependencies
-print(model_metrics)
+# Render the table properly
+kable(model_metrics, format = "html", caption = "Model Performance Comparison") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
 
 ```
+
 
 
 ```{python}
