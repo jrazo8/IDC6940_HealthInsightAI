@@ -1,7 +1,7 @@
 ---
-title: "Present a great story for data science projects"
-subtitle: "This is a Slide Template"
-author: "Students names (Advisor: Dr. Cohen)"
+title: "Diagnosing Diseases using kNN"
+subtitle: "An application of kNN to diagnose Diabetes"
+author: "Jacqueline Razo (Advisor: Dr. Cohen)"
 date: '`r Sys.Date()`'
 format:
   revealjs
@@ -17,37 +17,15 @@ editor:
     wrap: 72
 ---
 
-::: callout-important
-**Remember:** Your goal is to make your audience understand and care
-about your findings. By crafting a compelling story, you can effectively
-communicate the value of your data science project.
-
-Carefully read this template since it has instructions and tips to
-writing!
-
-More information about `revealjs`:
-<https://quarto.org/docs/reference/formats/presentations/revealjs.html>
-:::
-
 ## Introduction  {.smaller}
 
--   Develop a storyline that captures attention and maintains interest.
+- The k-Nearest-Neighbors (kNN) is an algorithm that is being used in a variety of fields to classify or predict data. 
 
--   Your audience is your peers
+- It's a simple algorithm that classifies data based on how similar a datapoint is to a class of datapoints.
 
--   Clearly state the problem or question you're addressing.
-
--   Introduce why it is relevant needs.
-
--   Provide an overview of your approach.
-
-In kernel estimator, weight function is known as kernel function
-[@efr2008]. Cite this paper [@bro2014principal]. The GEE [@wang2014].
-The PCA [@daffertshofer2004pca]\*
 
 ## Methods
 
--   Detail the models or algorithms used.
 
 -   Justify your choices based on the problem and data.
 
@@ -96,13 +74,6 @@ ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total))
 
 ## Modeling and Results
 
--   Explain your data preprocessing and cleaning steps.
-
--   Present your key findings in a clear and concise manner.
-
--   Use visuals to support your claims.
-
--   **Tell a story about what the data reveals.**
 
 ```{r}
 
@@ -110,8 +81,6 @@ ggplot1 = murders %>% ggplot(mapping = aes(x=population/10^6, y=total))
 
 ## Conclusion
 
--   Summarize your key findings.
 
--   Discuss the implications of your results.
 
 ## References

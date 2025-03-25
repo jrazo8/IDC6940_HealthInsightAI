@@ -1,14 +1,14 @@
 ---
 title: "Diagnosing Diseases using kNN"
 subtitle: "An application of kNN to diagnose Diabetes"
-author: "Jacqueline Razo & Elena Boiko (Advisor: Dr. Cohen)"
+author: "Jacqueline Razo (Advisor: Dr. Cohen)"
 date: '`r Sys.Date()`'
 format:
   html:
     code-fold: true
 course: Capstone Projects in Data Science
 bibliography: references.bib # file contains bibtex for references
-#always_allow_html: true # this allows to get PDF with HTML features
+always_allow_html: true # this allows to get PDF with HTML features
 self-contained: true
 execute: 
   warning: false
@@ -46,7 +46,7 @@ factors affecting its performance. Recent advancements in optimizing kNN
 for large datasets and the role of kNN in medical diagnosis,
 particularly diabetes prediction.
 
-### Theoretical Background of KNN
+#### Theoretical Background of KNN
 
 kNNs are supervised learning algorithms that work by comparing a data
 point to other similar data points to label it. It works on the
@@ -96,7 +96,7 @@ distance can perform better for correlated features. The review
 emphasized that selecting the right metric is dataset-dependent,
 influencing classification accuracy.
 
-### Challenges in Scaling kNN for Large Datasets
+#### Challenges in Scaling kNN for Large Datasets
 
 While kNN is simple and effective, it struggles with computational
 inefficiency when working with large datasets since it must calculate
@@ -147,9 +147,9 @@ prior research rather than conducting empirical comparisons, further
 work is needed to evaluate these optimizations in real-world medical
 classification tasks.
 
-### kNN in Disease Prediction: Applications & Limitations
+#### kNN in Disease Prediction: Applications & Limitations
 
-#### Disease Prediction with kNN
+##### Disease Prediction with kNN
 
 kNN has been widely used for diabetes classification and early
 detection. Ali et al. [@ali2020diabetes] tested six different kNN
@@ -199,7 +199,7 @@ that removing irrelevant features did not always improve performance,
 emphasizing the need for careful feature engineering in medical
 datasets.
 
-### kNN Beyond Prediction: Handling Missing Data
+#### kNN Beyond Prediction: Handling Missing Data
 
 While kNN is widely known for classification, it also plays a key role
 in data preprocessing for medical machine learning. Altamimi et al.
@@ -217,7 +217,7 @@ such as computational costs and sensitivity to parameter selection,
 reinforcing the need for further optimization when applying kNN to
 large-scale medical datasets.
 
-### Comparing kNN Variants & Hybrid Approaches
+#### Comparing kNN Variants & Hybrid Approaches
 
 Research indicate that kNN works well for diabetes prediction, but
 recent studies demonstrate it doesn't consistently provide the best
@@ -378,8 +378,11 @@ that data points with similar features belong to the same class.
 
 ### Implementation of kNN
 
+```{r, include=FALSE}
+install.packages("DiagrammeR", repos = "https://cloud.r-project.org")
+```
+
 ```{r}
-#install.packages("DiagrammeR")
 library(DiagrammeR)
 
 grViz("
@@ -411,29 +414,40 @@ digraph {
   edge [color = '#8B814C', arrowhead = vee, penwidth = 2]
 }
 ")
+ 
 ```
 
-#### Pre-procesing Data
+#### Pre-processing Data
 
 Data must be prepared before implementing the kNN. In order for the kNN
-algorithm to work better we can do the following:
+algorithm to work we need to handle missing values, make all values
+numeric and normalize or standardize the features. We also have the
+option of increasing accuracy by reducing dimensionality, removing
+correlated features and fixing class imbalance if we notice our data
+needs it.
 
-1.  Handle missing values: kNN's work by calculating the distance
+1.  **Handle missing values**: kNN's work by calculating the distance
     between datapoints and missing values can skew the results. We must
     remove the missing values by either inputting them or dropping them.
-2.  Make all values numeric: kNN's only handle numeric values so all
+2.  **Make all values numeric**: kNN's only handle numeric values so all
     categorical values must be encoded using either one-hot encoding or
     label encoding.
-3.  Normalize or Standardize the features: We must normalize or
+3.  **Normalize or Standardize the features**: We must normalize or
     standardize the features to make sure we reduce bias. We can use the
-    min-max scaler or the standard scaler to do this. 4 Reduce
-    dimensionality: The kNN can struggle to calculate the distance
-    between features if there are too many features. In order to solve
-    this we can use Principal Component Analysis to reduce the number of
-    features but keep the variance.
-4.  Fix class imbalance: Class imbalances can lead to a bias. We noticed
-    a class imbalance in our dataset and chose to use Synthetic Minority
-    Over-sampling Technique(SMOTE) in order to handle the imbalance.
+    min-max scaler or the standard scaler to do this.
+4.  **Reduce dimensionality**: The kNN can struggle to calculate the
+    distance between features if there are too many features. In order
+    to solve this we can use Principal Component Analysis to reduce the
+    number of features but keep the variance.
+5.  **Remove correlated features**: The kNN works best when there aren't
+    too many features, so we can use a correlation matrix to see which
+    features we can drop. For example, it might be good to drop any
+    features that have low variance or have a high correlation over 0.9
+    because this can be redundant.
+6.  **Fix class imbalance**: Class imbalances can lead to a bias. We
+    noticed a class imbalance in our dataset and chose to use Synthetic
+    Minority Over-sampling Technique(SMOTE) in order to handle the
+    imbalance.
 
 #### Hyperparameter Tuning
 
@@ -465,7 +479,7 @@ big file. [@deng2016efficient].
 
 ## Analysis and Results
 
-### 1. Data Exploration
+### Data Exploration & Visualization
 
 We explored the [CDC Diabetes Health
 Indicators](https://archive.ics.uci.edu/dataset/891/cdc+diabetes+health+indicators.)
@@ -481,53 +495,19 @@ provides important data on health behaviors, chronic diseases, and
 preventive health care use to help researchers and policymakers
 understand the health status and risks of the public.
 
-To transfer the data we used Python and the ucimlrepo package import the
-dataset directly from the UCI Machine Learning Repository, following the
-recommended instructions. This enabled us to easily save, prepare, and
-analyze the data in view of the current research.
+Python and the ucimlrepo package was used to import the dataset directly
+from the UCI Machine Learning Repository, following the recommended
+instructions. This enabled us to easily save, prepare, and analyze the
+data in view of the current research.
 
 ```{r, include= FALSE}
 library(reticulate)
 
-# Set RStudio to use Conda's Python
-#use_python("C:/Users/Elena/AppData/Local/r-miniconda/envs/r-reticulate/python.exe", required = TRUE)
-
-# Activate the Conda environment
-#use_condaenv("r-reticulate", required = TRUE)
-
 # Install necessary packages 
 py_install(c("pandas", "ucimlrepo", "scipy", "scikit-learn", "imbalanced-learn"))
 
+
 ```
-
-#### Data Composition
-
-The dataset consists of 253,680 survey responses and contains 22
-variables, including:
-
-• 1 target variable (Diabetes_binary): A binary classification
-indicating diabetes status (0 = No, 1 = Yes, including prediabetes).
-
-• 21 feature variables representing demographic, behavioral, and
-health-related attributes.
-
-The dataset includes a mix of categorical, ordinal, and continuous
-variables, covering factors such as:
-
-• Demographics: Age, Sex, Income, Education
-
-• Health conditions: High Blood Pressure, High Cholesterol, Stroke,
-Heart Disease
-
-• Lifestyle factors: Smoking, Physical Activity, Diet
-
-• Self-reported health status: General Health, Mental Health, Physical
-Health
-
-This dataset provides a large-scale representation of diabetes-related
-risk factors, making it valuable for exploratory data analysis,
-statistical modeling, and machine learning applications aimed at
-improving diabetes risk assessment and prevention strategies.
 
 ```{python}
 from ucimlrepo import fetch_ucirepo 
@@ -542,47 +522,45 @@ y = cdc_diabetes_health_indicators.data.targets
   
 ```
 
-**Feature Overview & Data Encoding**
+#### Data Composition
 
-The dataset consists of four types of variables:
+The following table displays the first few rows of the CDC Diabetes
+Health Indicators dataset after importing it from UC Irvine Machine
+Learning Repository.
 
-***1. Target Variable (1)*** Diabetes_binary:
+```{python}
+#| echo: false
+import pandas as pd
 
-Binary classification (0 = No diabetes, 1 = Diabetes/prediabetes).
+cdc_data_df = pd.concat([cdc_diabetes_health_indicators.data.features, 
+                         cdc_diabetes_health_indicators.data.targets], axis=1)
 
-***2. Binary Variables (14)*** Encoded as 0 = No, 1 = Yes (except Sex: 0
-= Female, 1 = Male):
+cdc_data_df.to_csv("cdc_data.csv", index=False)
 
-Health Conditions: HighBP, HighChol, CholCheck, Stroke,
-HeartDiseaseorAttack
+```
 
-Lifestyle Factors: Smoker, PhysActivity, Fruits, Veggies,
-HvyAlcoholConsump
+```{r, include= TRUE}
+library(knitr)
+library(readr)
 
-Healthcare Access & Mobility: AnyHealthcare, NoDocbcCost, DiffWalk, Sex
+cdc_data_df <- read_csv("cdc_data.csv")
 
-***3. Ordinal Variables (6)*** Encoded as numerical ranks to preserve
-meaningful order:
+kable(head(cdc_data_df))
+```
 
-Self-Reported Health Status: GenHlth, MentHlth, PhysHlth
-
-Demographics: Age, Education, Income
-
-Higher values indicate progression (e.g., older age groups, higher
-education levels, or higher income brackets).
-
-***4. Continuous Variable (1)*** BMI: Numeric variable representing Body
-Mass Index.
-
-The table below provides a detailed breakdown of all variables by type,
-description, and range of values.
+Upon closer inspection we can see the the dataset consists of 253,680
+survey responses and contains 21 feature variables and 1 binary target
+variable named **Diabetes_binary**. Table 1 shows a detailed summary of
+the different variables representing demographic, behavioral, and
+health-related attributes and the range of values found in each
+variable.
 
 ```{r}
 
-# Load necessary packages
+# Load packages
 library(knitr)
 
-# Create a Data Frame with Variable Information
+# Create Table 
 table_data <- data.frame(
   Type = c(
     "Target",
@@ -625,35 +603,22 @@ table_data <- data.frame(
 )
 
 # Print Table with knitr::kable()
-kable(table_data, caption = "Table 1. Summary of Explanatory Variables", align = "l")
+kable(table_data, caption = "Table 1. Summary of 22 Variables", align = "l")
 
 
 ```
 
-The following table displays the first few rows of the CDC Diabetes
-Health Indicators dataset.
+This dataset provides a large-scale representation of diabetes-related
+risk factors, making it valuable for exploratory data analysis,
+statistical modeling, and machine learning applications aimed at
+improving diabetes risk assessment and prevention strategies.
 
-```{python}
-#| echo: false
-import pandas as pd
+#### Data Integrity Assessment
 
-cdc_data_df = pd.concat([cdc_diabetes_health_indicators.data.features, 
-                         cdc_diabetes_health_indicators.data.targets], axis=1)
-
-cdc_data_df.to_csv("cdc_data.csv", index=False)
-
-```
-
-```{r, include= TRUE}
-library(knitr)
-library(readr)
-
-cdc_data_df <- read_csv("cdc_data.csv")
-
-kable(head(cdc_data_df))
-```
-
-### 1.2 Exploratory Data Analysis (EDA)
+In this step, we checked for null values, missing data (NaNs), and
+duplicate rows to ensure data integrity. Additionally, we identified
+columns with invalid values such as strings with spaces in numeric
+fields.
 
 ```{python, echo=FALSE}
 import pandas as pd
@@ -661,7 +626,6 @@ import pandas as pd
 # Copy features and add target variable
 cdc_data_df = cdc_diabetes_health_indicators.data.features.copy()
 cdc_data_df["Diabetes_binary"] = cdc_diabetes_health_indicators.data.targets
-
 
 ```
 
@@ -687,13 +651,6 @@ exploratory_data_analysis_df=pd.DataFrame(exploratory_data_analysis)
 exploratory_data_analysis_df.to_csv("eda.csv", index=False)
 
 ```
-
-#### Data Integrity Assessment
-
-In this step, we checked for null values, missing data (NaNs), and
-duplicate rows to ensure data integrity. Additionally, we identified
-columns with invalid values such as strings with spaces in numeric
-fields.
 
 ```{r}
 library(knitr)
@@ -724,45 +681,128 @@ analysis helps identify potential imbalances, outliers, and
 preprocessing needs, such as scaling or encoding, to ensure optimal
 model performance.
 
+Figure 2 shows a graph of the mean of different features in the data. It
+shows BMI which is a continuous variable indicating body mass index and
+the 6 ordinal values that includes demographics such as age, income, and
+education and the self-reported health status of GenHlth, MentHlth,
+PhysHlth.
+
 ```{python}
-df_stats= cdc_data_df.describe()
-df_stats
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from ucimlrepo import fetch_ucirepo
+
+# Import dataset
+cdc_diabetes_health_indicators = fetch_ucirepo(id=891)
+
+# Combine features and targets into one DataFrame
+cdc_data_df = pd.concat([
+    cdc_diabetes_health_indicators.data.features,
+    cdc_diabetes_health_indicators.data.targets
+], axis=1)
+
+# Exclude binary variables
+ord_variables = ['GenHlth', 'MentHlth', 'PhysHlth', 'Age', 'Education', 'Income', 'BMI']
+
+# Calculate means 
+mean_values = cdc_data_df[ord_variables].mean().sort_values(ascending=False)
+
+# Create plot 
+plt.figure(figsize=(10, 6))
+sns.barplot(x=mean_values.values, y=mean_values.index, palette="plasma")
+plt.title("Figure 2: Mean Values of Ordinal and Continuous Variables")
+plt.xlabel("Mean")
+plt.ylabel("Feature")
+plt.tight_layout()
+plt.show()
+
+
 ```
 
-***Key Findings from Statistical Summary:***
+From this graph we can quickly see BMI and age are the features with the
+highest mean which can impact the results of the kNN by dominating the
+distance metric. Similarly, GenHlth is the feature with the lowest mean
+which can make the kNN ignore it even if it's an important predictor. A
+good way to combat this problem is to standardize or scale the features.
 
-**Class Imbalance:**
+Similarly outliers can also skew the kNN by incresing the average
+distance that is calculated. Figure 3 shows us a box-and-whisker plot of
+the same variables as above but with the outliers.
 
-Only 13.9% of people have diabetes, which suggests an imbalance in the
-target variable. This may require oversampling (SMOTE) or class
-weighting when training models.
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from ucimlrepo import fetch_ucirepo
 
-**BMI and High Blood Pressure are Major Health Concerns:**
+# Import dataset
+cdc_diabetes_health_indicators = fetch_ucirepo(id=891)
 
--   The average BMI is 28.38, close to the overweight range.
--   43% of the population has high blood pressure, which is a known risk
-    factor for diabetes.
+# Combine features and targets into one DataFrame
+cdc_data_df = pd.concat([
+    cdc_diabetes_health_indicators.data.features,
+    cdc_diabetes_health_indicators.data.targets
+], axis=1)
 
-**Physical Activity and Diet Indicators:**
+# Exclude binary columns
+ord_variables = ['GenHlth', 'MentHlth', 'PhysHlth', 'Age', 'Education', 'Income', 'BMI']
 
--   75% of individuals engage in regular physical activity.
--   81% eat vegetables regularly, and 63% eat fruits regularly,
-    suggesting generally healthy dietary habits.
+# Create boxplot
+plt.figure(figsize=(12, 6))
+sns.boxplot(data=cdc_data_df[ord_variables], orient="h", palette="Set2")
+plt.title("Figure 3: Boxplot showing Outliers for Ordinal and Continuous Variables")
+plt.xlabel("Value")
+plt.tight_layout()
+plt.show()
 
-**Age and Income Influence Health Outcomes:**
+```
 
--   Older individuals are more likely to develop diabetes.
--   Higher income groups tend to report better health, which may
-    correlate with healthcare access.
+This boxplot shows us that BMI, MentHlth, and PhysHlth have many
+outliers on the upper end of the distribution. Although the median
+doesn't seem to be affected these outliers can increase the average of
+these features which can distort the distance formula in the kNN. Some
+effective methods to deal with outliers would be to remove them if the
+dataset is big enough, use robust scaler to reduce the influence of
+outliers or to use a weighted kNN. Using a weighted kNN will make the
+kNN give a higher weight to the closer neighbors than to the outliers.
 
-### 2. Visual Data Analysis
+Next, we will take a look at the binary features. Figure 4 shows us the
+balance between classes 0 and 1.
 
-The goal of visualization in exploratory data analysis (EDA) is to
-understand feature distributions, detect potential issues such as class
-imbalance and outliers, and identify relationships between variables.
-This helps in making informed decisions about data preprocessing,
-feature selection, and model improvements before training machine
-learning models.
+```{python}
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Filter binary columns 
+binary_cols = [col for col in cdc_data_df.columns 
+               if set(cdc_data_df[col].dropna().unique()).issubset({0, 1})]
+
+# Count 0s and 1s
+binary_counts = pd.DataFrame({
+    '0': (cdc_data_df[binary_cols] == 0).sum(),
+    '1': (cdc_data_df[binary_cols] == 1).sum()
+})
+
+# Plot
+binary_counts.plot(kind='barh', stacked=True, figsize=(10, 8), colormap='Set2')
+plt.title("Figure 4: Binary Feature Distribution of 0 and 1")
+plt.xlabel("Count")
+plt.ylabel("Feature")
+plt.legend(title="Class")
+plt.tight_layout()
+plt.show()
+
+```
+
+In Figure 4 we can see there is an imbalance in our target variable
+**Diabetes_binary**. Only 13.9% of people have diabetes or pre-diabetes
+denoted by a 1. This imbalance can lead to biased model predictions,
+favoring the dominant class while under-detecting diabetes cases.To
+address this, techniques such as oversampling (SMOTE) or undersampling
+should be considered to improve classification performance.
 
 ```{r, include= FALSE}
 library(reticulate)
@@ -770,70 +810,11 @@ py_install(c("matplotlib", "seaborn"))
 
 ```
 
-##### 2.1 Class Imbalance in Diabetes Prevalence
+##### Correlation Analysis
 
-An analysis of the target variable (Diabetes_binary) reveals significant
-class imbalance, which may skew model predictions toward the majority
-class.
-
-**Observations:**
-
-The dataset exhibits a significant class imbalance, with the majority
-class (No Diabetes = 0) greatly outnumbering the minority class
-(Diabetes/Prediabetes = 1).
-
-This imbalance can lead to biased model predictions, favoring the
-dominant class while under-detecting diabetes cases.
-
-To address this, techniques such as oversampling (SMOTE) or
-undersampling should be considered to improve classification
-performance.
-
-```{python}
-
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# Define the target variable
-target_variable = "Diabetes_binary"
-
-# Check if the target variable exists in the dataframe
-if target_variable in cdc_data_df.columns:
-    # Calculate counts and percentages
-    class_counts = cdc_data_df[target_variable].value_counts()
-    class_percentages = cdc_data_df[target_variable].value_counts(normalize=True) * 100
-
-    # Create a bar plot
-    plt.figure(figsize=(6, 4))
-    ax = sns.barplot(x=class_counts.index, y=class_counts.values, palette="Set2")
-
-    # Annotate bars with counts and percentages
-    for i, value in enumerate(class_counts.values):
-        percentage = class_percentages[i]
-        ax.text(i, value + 1000, f"{value} ({percentage:.2f}%)", ha="center", fontsize=12)
-
-    # Titles and labels
-    plt.title(f"Class Distribution of {target_variable}")
-    plt.ylabel("Count")
-    plt.xlabel("Diabetes Status (0 = No, 1 = Diabetes/Prediabetes)")
-    plt.xticks([0, 1], ["No Diabetes", "Diabetes/Prediabetes"])
-
-    # Show the plot
-    plt.show()
-
-    # Print the percentage breakdown
-    print(f"Class Distribution in Percentage:\n{class_percentages.round(2)}%")
-else:
-    print("No target variable detected. Please confirm which column represents diabetes.")
-
-
-```
-
-##### 2.2 Correlation Analysis
-
-A correlation heatmap was generated to examine relationships between
-variables. The correlation heatmap helps identify strongly correlated
-features, which may lead to redundancy in the model.
+A correlation heatmap was generated in Figure 5 to examine relationships
+between variables. The correlation heatmap helps identify strongly
+correlated features, which may lead to redundancy in the model.
 
 ```{python}
 
@@ -847,7 +828,7 @@ corr_matrix = cdc_data_df.corr()
 # Plot the heatmap
 plt.figure(figsize=(12, 8))
 sns.heatmap(corr_matrix, annot=True, fmt=".2f", cmap="coolwarm", linewidths=0.5, vmin=-1, vmax=1)
-plt.title("Feature Correlation Heatmap")
+plt.title("Figure 5: Feature Correlation Heatmap")
 plt.show()
 
 ```
@@ -894,107 +875,7 @@ modifications to prevent chronic diseases like diabetes.
 Since we have no correlation over 0.5, that means multicollinearity is
 not a major issue, and we don’t need to remove any variables.
 
-##### 2.3 Age and Diabetes Prevalence
-
-This boxplot illustrates the relationship between age and diabetes
-status (0 = No Diabetes, 1 = Diabetes/Prediabetes).
-
-```{python}
-
-# Define colors explicitly, ensuring the keys are strings
-palette_colors = {"0": "mediumaquamarine", "1": "gold"}
-
-# Convert the 'Diabetes_binary' column to string type to match the palette keys
-cdc_data_df["Diabetes_binary"] = cdc_data_df["Diabetes_binary"].astype(str)
-
-# Create the boxplot with corrected hue mapping
-plt.figure(figsize=(6, 4))
-sns.boxplot(x="Diabetes_binary", y="Age", data=cdc_data_df, palette=palette_colors)
-
-# Add title and labels
-plt.title("Age Distribution by Diabetes Status")
-plt.xlabel("Diabetes Status (0 = No, 1 = Diabetes/Prediabetes)")
-plt.ylabel("Age")
-
-# Show the plot
-plt.show()
-
-```
-
-Individuals with diabetes/prediabetes (1) tend to be older than those
-without.
-
-The median age is noticeably higher in the diabetes group.
-
-The interquartile range (IQR) suggests that most diabetic individuals
-fall within a more concentrated age range.
-
-Outliers in both groups indicate that some younger individuals also
-develop diabetes, suggesting the influence of additional risk factors.
-
-This visualization supports the well-established link between aging and
-diabetes risk, reinforcing the importance of early monitoring in older
-populations.
-
-##### 2.4 General Health and Diabetes Status
-
-This bar chart visualizes the distribution of self-reported general
-health (GenHlth) among individuals with and without
-diabetes/prediabetes.
-
-```{python}
-
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# Ensure Diabetes_binary column is integer type for hue mapping
-if 'Diabetes_binary' in cdc_data_df.columns:
-    cdc_data_df['Diabetes_binary'] = cdc_data_df['Diabetes_binary'].astype(int)
-
-# Ensure GenHlth column is categorical with the correct order
-if 'GenHlth' in cdc_data_df.columns:
-    cdc_data_df['GenHlth'] = cdc_data_df['GenHlth'].astype(int)
-
-# Define color mapping ensuring keys match hue values (0 and 1)
-palette_colors = {0: "mediumaquamarine", 1: "gold"}
-
-# Create the countplot with hue_order to ensure correct mapping
-plt.figure(figsize=(10, 5))
-sns.countplot(x='GenHlth', hue='Diabetes_binary', data=cdc_data_df, 
-              palette=palette_colors, hue_order=[0, 1])
-
-# Add labels and title
-plt.title("General Health vs Diabetes Status", fontsize=16)
-plt.xlabel("General Health (Self-Reported)", fontsize=14)
-plt.ylabel("Count", fontsize=14)
-plt.xticks(rotation=0)  # Ensure labels are horizontal for clarity
-
-# Ensure legend is displayed correctly
-plt.legend(title="Diabetes Status (0 = No, 1 = Diabetes/Prediabetes)")
-
-# Show the plot
-plt.show()
-
-```
-
-**General trend:**
-
-Most individuals reported their health as good (values 2 and 3). Very
-few people rated their health as poor (values 4 and 5).
-
-**Diabetes prevalence:**
-
-As general health worsens (higher values), the proportion of individuals
-with diabetes (gold bars) increases. This suggests a possible
-association between self-reported poor health and diabetes prevalence.
-
-**Majority without diabetes:**
-
-The majority of the dataset consists of individuals without diabetes
-(green bars), which aligns with the dataset imbalance previously
-observed.
-
-##### 2.5 BMI Distribution and Density Analysis by Diabetes Status
+##### BMI Distribution and Density Analysis by Diabetes Status
 
 BMI is a known risk factor for diabetes, and the analysis confirms that
 individuals with diabetes tend to have slightly higher BMI values on
@@ -1086,488 +967,286 @@ Other factors, such as age, cholesterol levels, and physical activity,
 should also be considered to improve the predictive accuracy of diabetes
 risk assessment.
 
-#### Conclusion
+***Key Findings from Data Exploration and Visualizations:***
 
-This Exploratory Data Analysis (EDA) provides a comprehensive overview
-of the dataset’s structure, distributions, and key correlations. The
-findings highlight several critical patterns:
+**Class Imbalance:**
 
-Diabetes prevalence is low (13.9%), leading to a class imbalance that
-may require resampling techniques.
+Only 13.9% of people have diabetes, which suggests an imbalance in the
+target variable. This may require oversampling (SMOTE) or class
+weighting when training models.
 
-Age, BMI, and high blood pressure are strong risk factors for diabetes.
+**BMI and High Blood Pressure are Major Health Concerns:**
 
-Socioeconomic factors (income, education) influence health status,
-supporting the need for targeted interventions.
+-   The average BMI is 28.38, close to the overweight range.
+-   43% of the population has high blood pressure, which is a known risk
+    factor for diabetes.
+
+**Physical Activity and Diet Indicators:**
+
+-   75% of individuals engage in regular physical activity.
+-   81% eat vegetables regularly, and 63% eat fruits regularly,
+    suggesting generally healthy dietary habits.
+
+**Age and Income Influence Health Outcomes:**
+
+-   Older individuals are more likely to develop diabetes.
+-   Higher income groups tend to report better health, which may
+    correlate with healthcare access.
 
 The next phase involves data preprocessing, feature selection, and model
 development to enhance predictive performance.
 
 ## 3. Modeling and Results
 
+### Models
+
+We chose to create three classification kNN models to illustrate the
+methodology. Model 1 shows us how the kNN works on simple data. Model 2
+shows us the impact of changing the k value on the classification model.
+Model 3 shows us how adjusting the class imbalance affects the model.
+Table 3 shows us a summary of the models.
+
+```{r}
+#Load gt package
+library(gt)
+
+#Create dataframe
+model_sum <- data.frame(
+  Model = c("Model 1", "Model 2", "Model 3"),
+  k = c(5, 8, 5), Weights = c("'uniform'", "'uniform'", "'distance'"),Distance = rep("Euclidean", 3),SMOTE = c("No", "No", "Yes"))
+
+# Create Table 
+model_sum %>%
+  gt() %>%tab_header(title = md("**Table 3: Model Summary**")
+  ) %>%cols_label(Model = "Model Name",k = "k value",Weights = "Weights", Distance = "Distance",SMOTE = "SMOTE") %>%cols_align(align = "center",columns = everything()) %>%tab_options(table.border.top.width = px(2),table.border.bottom.width = px(2),heading.align = "left")
+
+```
+
 #### Data Preprocessing
 
-The ordinal categorical variables include age, education, income and
-GenHlth. We chose to keep them the same and not do one-hot-encoding
-because age, education and income had a natural order that had
-meaningful distances. For example, a bigger number for age or income
-indicated an older age or a higher income. The dataset also included
-BMI, MentHlth, and PhysHlth as continuous variables and we normalized
-them during the pre-processing step.
-
-```{python}
-# Import missing libraries
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from imblearn.over_sampling import SMOTE
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-
-```
-
-#### Clean Data
-
-```{python}
-
-
-# Drop duplicate rows
-cdc_data_df.drop_duplicates(inplace=True)
-
-# Define features and target
-X = cdc_data_df.drop(columns=['Diabetes_binary'])  # Exclude target variable
-y = cdc_data_df["Diabetes_binary"]  # Target variable
-
-# Print class distribution before SMOTE
-print("Class Distribution Before SMOTE:\n", y.value_counts(normalize=True) * 100)
-
-```
-
-Before removing duplicates, the dataset contained 253,680 survey
-responses, with an 86.07% majority class (No Diabetes) and 13.93%
-minority class (Diabetes/Prediabetes). However, after removing duplicate
-rows, the total dataset size decreased, leading to a slight shift in
-class distribution to 84.70% (No Diabetes) and 15.29%
+In our analysis of the data we saw that there was no missing data so we
+didn't have to remove or impute any values. We did however find the
+there were duplicate values. We started cleaning the data by dropping
+these duplicates. Before removing the duplicates, the dataset contained
+253,680 survey responses, with an 86.07% majority class (No Diabetes)
+and 13.93% minority class (Diabetes/Prediabetes). However, after
+removing duplicate rows, the total dataset size decreased, leading to a
+slight shift in class distribution to 84.70% (No Diabetes) and 15.29%
 (Diabetes/Prediabetes). This change occurred because duplicate entries
 were not evenly distributed across both classes—more duplicates existed
 in the majority class. As a result, removing them slightly increased the
 proportion of the minority class. This step ensured a cleaner dataset
 while preserving meaningful class representation for further analysis.
 
-#### Apply SMOTE for Class Balancing
+The data also consisted of mostly numeric features such as the binary
+features and the ordinal categorical variables age, education, income
+and GenHlth. We kept the ordinal variables the same as they have a
+meaningful natural order that will provide the kNN with meaningful
+distances. Next, we divided the data into testing and training data. We used **test_size=0.2** to use 80% of the data for training the kNN and 20% of the data for testing. Finally, in Figure 2 we saw the features needed to be standardized or
+normalized. We chose to standardize them so that BMI and age could be on
+the same scale as the other features. You can view the pre-processing code for model 1 and 2 below.
 
 ```{python}
+# Pre-processing for Model 1 and Model 2
 
-# Apply SMOTE to balance classes
-smote = SMOTE(sampling_strategy='auto', random_state=42)
-X_resampled, y_resampled = smote.fit_resample(X, y)
+# Import libraries
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from ucimlrepo import fetch_ucirepo 
 
-# Convert back to DataFrame for consistency
-new_df = pd.DataFrame(X_resampled, columns=X.columns)
-new_df['Diabetes_binary'] = y_resampled  # Add target variable back
+# Load the dataset  
+cdc_diabetes_health_indicators = fetch_ucirepo(id=891) 
 
-# Check class distribution after SMOTE
-print("Class Distribution After SMOTE:\n", y_resampled.value_counts(normalize=True) * 100)
+# Create dataframe by combining features and targets
+cdc_data_df = pd.concat(
+    [cdc_diabetes_health_indicators.data.features, 
+     cdc_diabetes_health_indicators.data.targets],
+    axis=1
+)
 
-# Plot class distribution after SMOTE
-plt.figure(figsize=(6, 4))
-ax = sns.barplot(x=y_resampled.value_counts().index, y=y_resampled.value_counts().values, palette="Set2")
+# Drop duplicate rows
+cdc_data_df.drop_duplicates(inplace=True)
 
-for i, value in enumerate(y_resampled.value_counts().values):
-    percentage = y_resampled.value_counts(normalize=True)[i] * 100
-    ax.text(i, value + 1000, f"{value} ({percentage:.2f}%)", ha="center", fontsize=12)
+# Separate features and target 
+X = cdc_data_df.drop(columns="Diabetes_binary")
+y = cdc_data_df["Diabetes_binary"]
 
-plt.title("Class Distribution After SMOTE")
-plt.xlabel("Diabetes Status (0 = No, 1 = Diabetes/Prediabetes)")
-plt.ylabel("Count")
-plt.show()
+# Split training and testing data with an 80/20 mix
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
 
+# Standardize features
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
 
 ```
 
+For model 3 we chose to apply SMOTE to deal with the class imbalance. We
+chose to go with this because there are very few diabetes samples in our
+data and that might impact the accuracy of the results.
+
+```{python}
+#Extra pre-processing step for Model 3 ONLY
+from imblearn.over_sampling import SMOTE
+
+# Apply SMOTE to training data to use for Model 3
+smote = SMOTE(random_state=42)
+X_train_smote, y_train_smote = smote.fit_resample(X_train_scaled, y_train)
+
+```
 After applying SMOTE, the class distribution of the target variable
-(Diabetes_binary) is now balanced, with equal representation of both
+**Diabetes_binary** became balanced, with equal representation of both
 classes. This prevents the model from being biased towards the majority
-class and ensures better learning from the minority class. The balanced
-dataset will likely improve model performance, particularly in recall
+class and ensures better learning from the minority class. In theory, the balanced
+dataset should improve model performance, particularly in recall
 and overall classification metrics.
 
-#### Train-Test Split
+#### Training the kNN Models 
 
-```{python}
+##### Model 1
 
-# Split resampled dataset into training & test sets
-X_train, X_test, y_train, y_test = train_test_split(
-    X_resampled, y_resampled, test_size=0.3, random_state=100, stratify=y_resampled
-)
-print("Train/Test Split Completed!")
-
-
-```
-
-#### Scale Features (Essential for KNN)
-
-```{python}
-
-# Standardize only continuous variables
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
-
-print("Feature Scaling Completed!")
-
-
-```
-
-#### Train and Evaluate KNN Model
-
-**a. Run KNN on Imbalanced Data**
-
-```{python}
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, classification_report, roc_auc_score
-
-# Split original dataset before SMOTE
-X_train_imbal, X_test_imbal, y_train_imbal, y_test_imbal = train_test_split(
-    X, y, test_size=0.3, random_state=100, stratify=y
-)
-
-# Scale continuous features
-scaler = StandardScaler()
-X_train_imbal_scaled = scaler.fit_transform(X_train_imbal)
-X_test_imbal_scaled = scaler.transform(X_test_imbal)
-
-# Train KNN on imbalanced dataset
-knn_imbal = KNeighborsClassifier(n_neighbors=5, metric='minkowski', p=2)
-knn_imbal.fit(X_train_imbal_scaled, y_train_imbal)
-
-# Predictions
-y_pred_imbal = knn_imbal.predict(X_test_imbal_scaled)
-y_proba_imbal = knn_imbal.predict_proba(X_test_imbal_scaled)[:, 1]
-
-# Evaluate
-accuracy_imbal = accuracy_score(y_test_imbal, y_pred_imbal)
-roc_auc_imbal = roc_auc_score(y_test_imbal, y_proba_imbal)
-
-print(f"KNN (Before SMOTE) - Accuracy: {accuracy_imbal:.4f}")
-print(f"KNN (Before SMOTE) - ROC-AUC Score: {roc_auc_imbal:.4f}")
-print("\nClassification Report (Before SMOTE):")
-print(classification_report(y_test_imbal, y_pred_imbal))
-
-```
-
-Model performed well on majority class (0) but failed on diabetes cases
-(1). Recall for class 1 was very low (0.21).
-
-**b. Run KNN on Balanced Data (After SMOTE)**
+Model 1 is our baseline model and has an arbitrary k value of 5. It uses the euclidean distance to measure all the distances between the training dataset we specified and assigns a "uniform" weight to all the distances which means they are all the same importance. This model includes the imbalanced target dataset.  
 
 ```{python}
 
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, classification_report, roc_curve, roc_auc_score
+from sklearn.metrics import classification_report, accuracy_score, f1_score
 
-# Train KNN model
-knn_model = KNeighborsClassifier(n_neighbors=5, metric='minkowski', p=2)
-knn_model.fit(X_train_scaled, y_train)
-
-# Make predictions
-y_pred = knn_model.predict(X_test_scaled)
-y_test_proba_knn = knn_model.predict_proba(X_test_scaled)[:, 1]
-
-# Evaluate model performance
-accuracy = accuracy_score(y_test, y_pred)
-roc_auc = roc_auc_score(y_test, y_test_proba_knn)
-
-print(f"KNN (After SMOTE) - Accuracy: {accuracy:.4f}")
-print(f"KNN (After SMOTE) - ROC-AUC Score: {roc_auc:.4f}")
-print("\nClassification Report:")
-print(classification_report(y_test, y_pred))
-
-# Store ROC values for comparison later
-fpr_knn, tpr_knn, _ = roc_curve(y_test, y_test_proba_knn)
-
-
+# Model 1: 
+knn_model_1 = KNeighborsClassifier(n_neighbors=5, weights='uniform', metric='euclidean')
+knn_model_1.fit(X_train_scaled, y_train)
+y_pred1 = knn_model_1.predict(X_test_scaled)
+print(classification_report(y_test, y_pred1))
 
 ```
 
-The model is much better at detecting diabetes (recall: 0.84). Lower
-accuracy but a better-balanced model.
+#### Model 2
 
-ROC-AUC is significantly better, meaning the model can rank positive
-cases more effectively.
-
-#### Improve KNN Further
-
-**Feature Selection Using Chi-Square** We will test if removing
-low-scoring features improves KNN.
-
-```{python}
-
-from sklearn.feature_selection import SelectKBest, chi2
-import matplotlib.pyplot as plt
-
-# Define features and target AFTER SMOTE
-X_smote = new_df.drop(columns=['Diabetes_binary'])  # Features
-y_smote = new_df["Diabetes_binary"]  # Target variable
-
-# Apply Chi-Square feature selection
-chi2_selector = SelectKBest(chi2, k="all")  
-X_kbest = chi2_selector.fit_transform(X_smote, y_smote)
-
-# Store feature scores
-chi2_scores = chi2_selector.scores_
-
-# Create DataFrame with results
-chi2_results = pd.DataFrame({
-    "Feature": X_smote.columns,
-    "Chi2 Score": chi2_scores
-})
-
-# Sort by importance
-chi2_results = chi2_results.sort_values(by="Chi2 Score", ascending=False)
-
-# Print results
-print(chi2_results)
-
-# Select **top 10-15 features**
-selected_features = chi2_results.head(12)["Feature"].values  # Select top 12 features
-
-print("Selected Features:", selected_features)
-
-# Plot feature importance
-plt.figure(figsize=(10, 6))
-plt.barh(chi2_results['Feature'], chi2_results['Chi2 Score'], color="seagreen")
-plt.xlabel('Chi2 Score')
-plt.title('Chi-Square Scores of Features')
-plt.gca().invert_yaxis()  # To display highest score at the top
-plt.show()
-
-```
-
-**Train and Evaluate KNN Model**
-
-```{python}
-
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-
-# Keep only the selected features
-X_smote_selected = new_df[selected_features]  # Use only top features
-
-# Train-test split
-X_train, X_test, y_train, y_test = train_test_split(
-    X_smote_selected, y_resampled, test_size=0.3, random_state=100, stratify=y_resampled
-)
-
-print("Train/Test Split Completed!")
-
-
-```
+In model 2 we chose to still keep using the euclidean distance but this time we are using a k value of 8. In theory adjusting this k value should improve the accuracy because now it will use the majority between the closest 8 neighbors. If the k value of 5 somehow missed an important neighbor then using a larger k value should help remedy this. We are still using a "uniform" weight and the target variable is still imbalanced.
 
 ```{python}
 
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score, classification_report, roc_auc_score, roc_curve
+from sklearn.metrics import classification_report, accuracy_score, f1_score
 
-# Standardize only continuous variables
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
-
-# Train KNN model
-knn_model = KNeighborsClassifier(n_neighbors=5, metric='minkowski', p=2)
-knn_model.fit(X_train_scaled, y_train)
-
-# Make predictions
-y_pred = knn_model.predict(X_test_scaled)
-y_test_proba_knn = knn_model.predict_proba(X_test_scaled)[:, 1]
-
-# Evaluate model performance
-accuracy = accuracy_score(y_test, y_pred)
-roc_auc = roc_auc_score(y_test, y_test_proba_knn)
-
-print(f"KNN (Feature Selection) - Accuracy: {accuracy:.4f}")
-print(f"KNN (Feature Selection) - ROC-AUC Score: {roc_auc:.4f}")
-print("\nClassification Report:")
-print(classification_report(y_test, y_pred))
-
-# Store ROC values for later comparison
-fpr_knn, tpr_knn, _ = roc_curve(y_test, y_test_proba_knn)
-
+# Model 2: 
+knn_model_2 = KNeighborsClassifier(n_neighbors=8, weights='uniform', metric='euclidean')
+knn_model_2.fit(X_train_scaled, y_train)
+y_pred2 = knn_model_2.predict(X_test_scaled)
+print(classification_report(y_test, y_pred2))
 
 ```
+#### Model 3
 
-#### Logistic Regression (Use SMOTE)
+Model 3 attempts to show us how using SMOTE to try to balance the target variable affects the model. It uses the same k value as the baseline model 1 but uses a "distance" weight instead of a "uniform" weight.
 
 ```{python}
 
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report, roc_auc_score
-
-# Define features and target
-X = new_df.drop(columns=['Diabetes_binary'])
-y = new_df['Diabetes_binary']
-
-# Train-test split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=100, stratify=y)
-
-# Scale features
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
-
-# Train Logistic Regression
-log_reg = LogisticRegression(max_iter=500, solver='liblinear')
-log_reg.fit(X_train_scaled, y_train)
-
-# Make predictions
-y_pred = log_reg.predict(X_test_scaled)
-y_test_proba = log_reg.predict_proba(X_test_scaled)[:, 1]
-
-# Evaluate model
-print("Logistic Regression Accuracy:", accuracy_score(y_test, y_pred))
-print("ROC-AUC Score:", roc_auc_score(y_test, y_test_proba))
-print("\nClassification Report:\n", classification_report(y_test, y_pred))
-
+# Model 3:
+knn_model_3 = KNeighborsClassifier(n_neighbors=5, weights='distance', metric='euclidean')
+knn_model_3.fit(X_train_smote, y_train_smote)
+y_pred_3 = knn_model_3.predict(X_test_scaled)
+print(classification_report(y_test, y_pred_3))
 
 ```
+#### Evaluating and Comparing the models 
 
-#### Decision Tree (Test on Both Datasets)
+Now that the three models have been trained we can focus on evaluating them. The table below shows the 
 
 ```{python}
-
-from sklearn.tree import DecisionTreeClassifier
-
-# Try on `cdc_data_df` (before SMOTE)
-X = cdc_data_df.drop(columns=['Diabetes_binary'])
-y = cdc_data_df['Diabetes_binary']
-
-# Train-test split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=100, stratify=y)
-
-# Train Decision Tree
-dt_model = DecisionTreeClassifier(max_depth=10, random_state=100)
-dt_model.fit(X_train, y_train)
-
-# Make predictions
-y_pred = dt_model.predict(X_test)
-y_test_proba = dt_model.predict_proba(X_test)[:, 1]
-
-# Evaluate model
-print("Decision Tree Accuracy:", accuracy_score(y_test, y_pred))
-print("ROC-AUC Score:", roc_auc_score(y_test, y_test_proba))
-print("\nClassification Report:\n", classification_report(y_test, y_pred))
-
-
-```
-
-#### Random Forest (Use cdc_data_df)
-
-```{python}
-
-from sklearn.ensemble import RandomForestClassifier
-
-# Train Random Forest
-rf_model = RandomForestClassifier(n_estimators=200, max_depth=15, random_state=100, n_jobs=-1)
-rf_model.fit(X_train, y_train)
-
-# Make predictions
-y_pred = rf_model.predict(X_test)
-y_test_proba = rf_model.predict_proba(X_test)[:, 1]
-
-# Evaluate model
-print("Random Forest Accuracy:", accuracy_score(y_test, y_pred))
-print("ROC-AUC Score:", roc_auc_score(y_test, y_test_proba))
-print("\nClassification Report:\n", classification_report(y_test, y_pred))
-
-
-```
-
-### Code Implementation Comparison
-
-```{r, echo=FALSE}
-options(repos = c(CRAN = "https://cran.rstudio.com/")) # Set CRAN mirror
-install.packages("fastmap", dependencies=TRUE)
-install.packages("kableExtra", dependencies=TRUE)
-
-```
-
-```{r, echo=FALSE}
-install.packages("fastmap")
-install.packages("kableExtra")
-
-```
-
-```{r}
-library(kableExtra)
-
-# Create DataFrame
-model_metrics <- data.frame(
-  Model = c("KNN (Before SMOTE)", "KNN (After SMOTE)", "KNN (Feature Selection)", 
-            "Logistic Regression", "Decision Tree (After SMOTE)", "Decision Tree (Before SMOTE)", "Random Forest (Before SMOTE)"),
-  Applied_SMOTE = c("No", "Yes", "Yes", "Yes", "Yes", "No", "No"),  
-  Accuracy = c(0.8325, 0.7620, 0.7545, 0.7253, 0.8486, 0.8486, 0.8539),
-  ROC_AUC = c(0.7046, 0.8337, 0.8261, 0.8022, 0.7941, 0.7941, 0.8126),
-  Precision_0 = c(0.87, 0.81, 0.80, 0.73, 0.86, 0.86, 0.86),
-  Recall_0 = c(0.95, 0.68, 0.68, 0.71, 0.97, 0.97, 0.98),
-  Precision_1 = c(0.41, 0.73, 0.72, 0.72, 0.52, 0.52, 0.60),
-  Recall_1 = c(0.21, 0.84, 0.83, 0.74, 0.15, 0.15, 0.13)
-)
-
-# Render the table properly
-kable(model_metrics, format = "html", caption = "Model Performance Comparison") %>%
-  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover", "condensed"))
-
-```
-
-```{python}
-
-import matplotlib.pyplot as plt
-import numpy as np
+# import libraries
 import pandas as pd
-from sklearn.metrics import roc_curve
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, roc_auc_score
 
-# Creating a DataFrame to compare model results
-model_comparison = pd.DataFrame({
-    "Model": ["KNN (Before SMOTE)", "KNN (After SMOTE)", "KNN (Feature Selection)", 
-              "Logistic Regression (SMOTE)", "Decision Tree (Before & After SMOTE)", "Random Forest (Before SMOTE)"],
-    "Accuracy": [0.8325, 0.7620, 0.7545, 0.7253, 0.8486, 0.8539],
-    "ROC-AUC Score": [0.7046, 0.8337, 0.8261, 0.8022, 0.7941, 0.8126],
-    "Applied SMOTE": ["No", "Yes", "Yes (Feature Selection)", "Yes", "Both", "No"]
+# Create dataframe 
+results = pd.DataFrame({
+    'Model': ['Model 1', 'Model 2', 'Model 3'],'k': [5, 8, 5],
+    'Weight': ['Uniform', 'Uniform', 'Distance'],
+    'SMOTE': ['No', 'No', 'Yes'],
+    'Accuracy': [
+        accuracy_score(y_test, y_pred1),
+        accuracy_score(y_test, y_pred2),
+        accuracy_score(y_test, y_pred_3)
+    ],
+    'F1 Score': [
+        f1_score(y_test, y_pred1),
+        f1_score(y_test, y_pred2),
+        f1_score(y_test, y_pred_3)
+    ],
+    'Precision': [
+        precision_score(y_test, y_pred1),
+        precision_score(y_test, y_pred2),
+        precision_score(y_test, y_pred_3)
+    ],
+    'Recall': [
+        recall_score(y_test, y_pred1),
+        recall_score(y_test, y_pred2),
+        recall_score(y_test, y_pred_3)
+    ],
+    'ROC AUC': [
+        roc_auc_score(y_test, knn_model_1.predict_proba(X_test_scaled)[:, 1]),
+        roc_auc_score(y_test, knn_model_2.predict_proba(X_test_scaled)[:, 1]),
+        roc_auc_score(y_test, knn_model_3.predict_proba(X_test_scaled)[:, 1])
+    ]
 })
 
-# Plot ROC Curves
-plt.figure(figsize=(8, 6))
-
-# Example ROC curve values (assuming we have stored FPR, TPR for each model)
-roc_curves = {
-    "KNN (Before SMOTE)": ([0.0, 0.2, 0.5, 1.0], [0.0, 0.4, 0.7, 1.0], 0.7046),
-    "KNN (After SMOTE)": ([0.0, 0.1, 0.6, 1.0], [0.0, 0.5, 0.8, 1.0], 0.8337),
-    "KNN (Feature Selection)": ([0.0, 0.15, 0.55, 1.0], [0.0, 0.45, 0.75, 1.0], 0.8261),
-    "Logistic Regression (SMOTE)": ([0.0, 0.1, 0.55, 1.0], [0.0, 0.48, 0.78, 1.0], 0.8022),
-    "Decision Tree (Before & After SMOTE)": ([0.0, 0.2, 0.5, 1.0], [0.0, 0.4, 0.7, 1.0], 0.7941),
-    "Random Forest (Before SMOTE)": ([0.0, 0.1, 0.6, 1.0], [0.0, 0.5, 0.8, 1.0], 0.8126)
-}
-
-for model, (fpr, tpr, auc) in roc_curves.items():
-    plt.plot(fpr, tpr, label=f"{model} (AUC = {auc:.2f})")
-
-plt.plot([0, 1], [0, 1], linestyle="--", color="gray")
-plt.xlabel("False Positive Rate")
-plt.ylabel("True Positive Rate")
-plt.title("ROC Curves for Different Models")
-plt.legend()
-plt.show()
+# Design the table 
+results.style \
+    .set_caption("KNN Model Performance Summary") \
+    .format({
+        "Accuracy": "{:.2%}",
+        "F1 Score": "{:.2%}",
+        "Precision": "{:.2%}",
+        "Recall": "{:.2%}",
+        "ROC AUC": "{:.2f}"
+    }) \
+    .set_properties(**{'text-align': 'center'}) \
+    .set_table_styles([
+        {'selector': 'caption', 'props': [('caption-side', 'top'), ('font-weight', 'bold'), ('font-size', '16px')]},
+        {'selector': 'th', 'props': [('background-color', '#f2f2f2'), ('font-size', '14px')]}
+    ])
 
 
 ```
+
+
+```{r, echo=FALSE}
+
+#options(repos = c(CRAN = "https://cran.rstudio.com/")) # Set CRAN mirror
+#install.packages("fastmap", dependencies=TRUE)
+#install.packages("kableExtra", dependencies=TRUE)
+
+```
+
+```{r, echo=FALSE}
+
+#install.packages("fastmap")
+#install.packages("kableExtra")
+
+```
+### Results
+
+Model 2 has the highest accuracy at 84.46% but this accuracy score is high because it is good at detecting the non-diabetic cases which are the majority of cases. It also has the highest ROC AUC score of 0.74 which means it's the best model at seperating different classes; however, the recall is 12.28%. This means the model is only correctly classifying 12.28% of the actual positive cases for diabetes. Since our purpose of using the kNN is to detect diabetes we wouldn't want to use this model. This leaves model 3 which has an accuracy of 70.14% and a much higher recall of 58.44%. Model 3 is able to correctly identify a little over half of the positive diabetes cases. This allows us to see how using the distance weight and using SMOTE to balance the classes lead to a better model. 
+
 
 ## Conclusion
 
--   Summarize your key findings.
+kNN's are a simple but powerful algorithm that can be used for
+regression and classification problems. In classification problems the
+kNN's compute the distance between data points with the distance formula
+the user specifies and then use the majority of the k nearest neighbor
+also specified by the user to classify the unknown data point. This
+algorithm has proven useful in many industries such as healthcare.
 
--   Discuss the implications of your results.
+In this project we created three kNN models that were trained to classify
+unknown datapoints into diabetes or non-diabetes classes using the data from UC
+Irvines Machine Learning Repository called CDC Diabetes Health
+indicators. We were able to see how fine tuning a kNN model can help us detect diabetes in the healthcare setting. 
+
 
 ## References
