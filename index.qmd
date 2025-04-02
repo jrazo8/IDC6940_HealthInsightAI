@@ -1156,7 +1156,7 @@ print(classification_report(y_test, y_pred_3))
 ```
 #### Evaluating and Comparing the models 
 
-Now that the three models have been trained we can focus on evaluating them. The table below shows the 
+Now that the three models have been trained we can focus on evaluating them. The table below shows the summary of the three models. 
 
 ```{python}
 # import libraries
@@ -1246,7 +1246,7 @@ algorithm has proven useful in many industries such as healthcare.
 In this project we created three kNN models that were trained to classify
 unknown datapoints into diabetes or non-diabetes classes using the data from UC
 Irvines Machine Learning Repository called CDC Diabetes Health
-indicators. We were able to see how fine tuning a kNN model can help us detect diabetes in the healthcare setting. 
+indicators. We were able to see how fine tuning a kNN model can help us detect diabetes in the healthcare setting.
 
 
 ## References

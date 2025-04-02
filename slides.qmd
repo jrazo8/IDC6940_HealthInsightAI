@@ -23,13 +23,41 @@ editor:
 
 - It's a simple algorithm that classifies data based on how similar a datapoint is to a class of datapoints.
 
+- One of the benefits of using this algorithmic model is how simple it is to use and the fact it’s non-parametric which means it fits a wide variety of datasets.
 
-## Methods
+- One drawback from using this model is that it does have a higher computational cost than other models which means that it doesn’t perform as well or fast on big data.
+
+- In this paper we will focus on the methodology and application of kNN models in the field of healthcare to predict diabetes, a pressing public health problem.
 
 
--   Justify your choices based on the problem and data.
+## Methods {.smaller}
 
+- The kNN algorithm is a nonparametric supervised learning algorithm that can be used for classification or regression problems. (Syriopoulos et al. 2023) 
 
+- In classification, it classifies a datapoint by using the euclidean distance formula to find the nearest k data specified. Once these k data points have been found, the kNN assigns a category to the new datapoint based off the category with the majority of the data points that are similar.
+
+## Methods Continued {.smaller}
+
+Figure 1 illustrates this methodology with two distinct classes of hearts and circles. The knn algorithm is attempting to classify the mystery figure represented by the red square. The k parameter is set to k=5 which means the algorithm will use the euclidean distance formula to find the 5 nearest neighbors illustrated by the green circle. From here the algorithm simply counts the number from each class and designates the class that represents the majority which in this case is a heart.
+
+- ![Figure 1](images/kNN_picture.png){width="200" height="200"}
+
+## Methods- The classification process {.smaller}
+
+The classification process has three distinct steps:
+
+1. Distance calculation
+The knn first measures the distance between the datapoint it’s trying to classify and all the training data points. There are different distance calculation methods that can be used but the default and most commonly used method with the kNN is the Euclidean distance formula.
+
+$$
+d = \sqrt{(X_2 - X_1)^2 + (Y_2 - Y_1)^2}
+$$
+2. Neighbor Selection
+The kNN allows the selection of a parameter k that is used by the algorithm to choose how many neighbors will be used to classify the unknown datapoint. Studies recommend using cross-validation or heuristic methods, such as setting k to the square root of the dataset size, to determine an optimal value
+
+3. Classification decision based on majority voting
+
+Once the k-nearest neighbors are identified, the algorithm assigns the new data point the most frequent class label among its neighbors. In cases of ties, distance-weighted voting can be applied, where closer neighbors have higher influence on the classification decision 
 
 ## Data Exploration and Visualization
 
