@@ -16,6 +16,7 @@ execute:
 editor: 
   markdown: 
     wrap: 72
+
 ---
 
 Slides: [slides.html](slides.html){target="_blank"} ( Go to `slides.qmd`
@@ -545,12 +546,13 @@ library(readr)
 
 cdc_data_df <- read_csv("cdc_data.csv")
 
-kable(head(cdc_data_df))
+#kable(head(cdc_data_df))
+kable(head(cdc_data_df), caption = "Table 1: CDC Diabetes Health Indicators dataset")
 ```
 
-Upon closer inspection we can see the the dataset consists of 253,680
+Upon closer inspection we can see the dataset consists of 253,680
 survey responses and contains 21 feature variables and 1 binary target
-variable named **Diabetes_binary**. Table 1 shows a detailed summary of
+variable named **Diabetes_binary**. Table 2 shows a detailed summary of
 the different variables representing demographic, behavioral, and
 health-related attributes and the range of values found in each
 variable.
@@ -603,7 +605,7 @@ table_data <- data.frame(
 )
 
 # Print Table with knitr::kable()
-kable(table_data, caption = "Table 1. Summary of 22 Variables", align = "l")
+kable(table_data, caption = "Table 2. Summary of 22 Variables", align = "l")
 
 
 ```
@@ -660,7 +662,7 @@ library(readr)
 exploratory_df <- read_csv("eda.csv")
 
 # Print table with a new title (caption)
-kable(exploratory_df, caption = "Table 2: Data Integrity Report")
+kable(exploratory_df, caption = "Table 3: Data Integrity Report")
 
 
 ```
@@ -681,7 +683,7 @@ analysis helps identify potential imbalances, outliers, and
 preprocessing needs, such as scaling or encoding, to ensure optimal
 model performance.
 
-Figure 2 shows a graph of the mean of different features in the data. It
+Figure 4 shows a graph of the mean of different features in the data. It
 shows BMI which is a continuous variable indicating body mass index and
 the 6 ordinal values that includes demographics such as age, income, and
 education and the self-reported health status of GenHlth, MentHlth,
@@ -712,7 +714,7 @@ mean_values = cdc_data_df[ord_variables].mean().sort_values(ascending=False)
 # Create plot 
 plt.figure(figsize=(10, 6))
 sns.barplot(x=mean_values.values, y=mean_values.index, palette="plasma")
-plt.title("Figure 2: Mean Values of Ordinal and Continuous Variables")
+plt.title("Figure 4: Mean Values of Ordinal and Continuous Variables")
 plt.xlabel("Mean")
 plt.ylabel("Feature")
 plt.tight_layout()
@@ -728,7 +730,7 @@ which can make the kNN ignore it even if it's an important predictor. A
 good way to combat this problem is to standardize or scale the features.
 
 Similarly outliers can also skew the kNN by incresing the average
-distance that is calculated. Figure 3 shows us a box-and-whisker plot of
+distance that is calculated. Figure 5 shows us a box-and-whisker plot of
 the same variables as above but with the outliers.
 
 ```{python}
@@ -752,7 +754,7 @@ ord_variables = ['GenHlth', 'MentHlth', 'PhysHlth', 'Age', 'Education', 'Income'
 # Create boxplot
 plt.figure(figsize=(12, 6))
 sns.boxplot(data=cdc_data_df[ord_variables], orient="h", palette="Set2")
-plt.title("Figure 3: Boxplot showing Outliers for Ordinal and Continuous Variables")
+plt.title("Figure 5: Boxplot showing Outliers for Ordinal and Continuous Variables")
 plt.xlabel("Value")
 plt.tight_layout()
 plt.show()
@@ -768,7 +770,7 @@ dataset is big enough, use robust scaler to reduce the influence of
 outliers or to use a weighted kNN. Using a weighted kNN will make the
 kNN give a higher weight to the closer neighbors than to the outliers.
 
-Next, we will take a look at the binary features. Figure 4 shows us the
+Next, we will take a look at the binary features. Figure 6 shows us the
 balance between classes 0 and 1.
 
 ```{python}
@@ -788,7 +790,7 @@ binary_counts = pd.DataFrame({
 
 # Plot
 binary_counts.plot(kind='barh', stacked=True, figsize=(10, 8), colormap='Set2')
-plt.title("Figure 4: Binary Feature Distribution of 0 and 1")
+plt.title("Figure 6: Binary Feature Distribution of 0 and 1")
 plt.xlabel("Count")
 plt.ylabel("Feature")
 plt.legend(title="Class")
@@ -812,7 +814,7 @@ py_install(c("matplotlib", "seaborn"))
 
 ##### Correlation Analysis
 
-A correlation heatmap was generated in Figure 5 to examine relationships
+A correlation heatmap was generated in Figure 7 to examine relationships
 between variables. The correlation heatmap helps identify strongly
 correlated features, which may lead to redundancy in the model.
 
@@ -828,7 +830,7 @@ corr_matrix = cdc_data_df.corr()
 # Plot the heatmap
 plt.figure(figsize=(12, 8))
 sns.heatmap(corr_matrix, annot=True, fmt=".2f", cmap="coolwarm", linewidths=0.5, vmin=-1, vmax=1)
-plt.title("Figure 5: Feature Correlation Heatmap")
+plt.title("Figure 7: Feature Correlation Heatmap")
 plt.show()
 
 ```
@@ -896,7 +898,7 @@ if target_variable in cdc_data_df.columns:
     sns.boxplot(x=target_variable, y="BMI", data=cdc_data_df, 
                 hue=target_variable, palette="Set3", legend=False)
     
-    plt.title("BMI Distribution by Diabetes Status")
+    plt.title("Figure 8: BMI Distribution by Diabetes Status")
     plt.xlabel("Diabetes Status (0 = No, 1 = Diabetes/Prediabetes)")
     plt.ylabel("BMI")
     plt.show()
@@ -914,7 +916,7 @@ sns.kdeplot(data=cdc_data_df[cdc_data_df['Diabetes_binary'] == 1]['BMI'],
             label='Diabetes/Prediabetes (1)', color="salmon", fill=True)
 
 # Titles and labels
-plt.title('BMI Density by Diabetes Status', fontsize=16)
+plt.title('Figure 9: BMI Density by Diabetes Status', fontsize=16)
 plt.xlabel('BMI', fontsize=14)
 plt.ylabel('Density', fontsize=14)
 plt.legend(title='Diabetes Status')
@@ -1001,10 +1003,10 @@ development to enhance predictive performance.
 ### Models
 
 We chose to create three classification kNN models to illustrate the
-methodology. Model 1 shows us how the kNN works on simple data. Model 2
+methodology. Model 1 will be our baseline model. Model 2
 shows us the impact of changing the k value on the classification model.
 Model 3 shows us how adjusting the class imbalance affects the model.
-Table 3 shows us a summary of the models.
+Table 4 shows us a summary of the models.
 
 ```{r}
 #Load gt package
@@ -1013,11 +1015,11 @@ library(gt)
 #Create dataframe
 model_sum <- data.frame(
   Model = c("Model 1", "Model 2", "Model 3"),
-  k = c(5, 8, 5), Weights = c("'uniform'", "'uniform'", "'distance'"),Distance = rep("Euclidean", 3),SMOTE = c("No", "No", "Yes"))
+  k = c(5, 15, 15), Weights = c("'uniform'", "'uniform'", "'distance'"),Distance = rep("Euclidean", 3),SMOTE = c("No", "No", "Yes"))
 
 # Create Table 
 model_sum %>%
-  gt() %>%tab_header(title = md("**Table 3: Model Summary**")
+  gt() %>%tab_header(title = md("**Table 4: Model Summary**")
   ) %>%cols_label(Model = "Model Name",k = "k value",Weights = "Weights", Distance = "Distance",SMOTE = "SMOTE") %>%cols_align(align = "center",columns = everything()) %>%tab_options(table.border.top.width = px(2),table.border.bottom.width = px(2),heading.align = "left")
 
 ```
@@ -1127,7 +1129,7 @@ print(classification_report(y_test, y_pred1))
 
 #### Model 2
 
-In model 2 we chose to still keep using the euclidean distance but this time we are using a k value of 8. In theory adjusting this k value should improve the accuracy because now it will use the majority between the closest 8 neighbors. If the k value of 5 somehow missed an important neighbor then using a larger k value should help remedy this. We are still using a "uniform" weight and the target variable is still imbalanced.
+In model 2 we chose to still keep using the euclidean distance but this time we are using a k value of 15. In theory adjusting this k value should improve the accuracy because now it will use the majority between the closest 15 neighbors. If the k value of 5 somehow missed an important neighbor then using a larger k value should help remedy this. We are still using a "uniform" weight and the target variable is still imbalanced.
 
 ```{python}
 
@@ -1135,7 +1137,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, accuracy_score, f1_score
 
 # Model 2: 
-knn_model_2 = KNeighborsClassifier(n_neighbors=8, weights='uniform', metric='euclidean')
+knn_model_2 = KNeighborsClassifier(n_neighbors=15, weights='uniform', metric='euclidean')
 knn_model_2.fit(X_train_scaled, y_train)
 y_pred2 = knn_model_2.predict(X_test_scaled)
 print(classification_report(y_test, y_pred2))
@@ -1143,12 +1145,12 @@ print(classification_report(y_test, y_pred2))
 ```
 #### Model 3
 
-Model 3 attempts to show us how using SMOTE to try to balance the target variable affects the model. It uses the same k value as the baseline model 1 but uses a "distance" weight instead of a "uniform" weight.
+Model 3 attempts to show us how using SMOTE to try to balance the target variable affects the model. It uses the same k value as model 2 but uses a "distance" weight instead of a "uniform" weight.
 
 ```{python}
 
 # Model 3:
-knn_model_3 = KNeighborsClassifier(n_neighbors=5, weights='distance', metric='euclidean')
+knn_model_3 = KNeighborsClassifier(n_neighbors=15, weights='distance', metric='euclidean')
 knn_model_3.fit(X_train_smote, y_train_smote)
 y_pred_3 = knn_model_3.predict(X_test_scaled)
 print(classification_report(y_test, y_pred_3))
@@ -1156,7 +1158,7 @@ print(classification_report(y_test, y_pred_3))
 ```
 #### Evaluating and Comparing the models 
 
-Now that the three models have been trained we can focus on evaluating them. The table below shows the summary of the three models. 
+Now that the three models have been trained we can focus on evaluating them. Table 5 below shows the summary of the three models. 
 
 ```{python}
 # import libraries
@@ -1165,7 +1167,7 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 
 # Create dataframe 
 results = pd.DataFrame({
-    'Model': ['Model 1', 'Model 2', 'Model 3'],'k': [5, 8, 5],
+    'Model': ['Model 1', 'Model 2', 'Model 3'],'k': [5, 15, 15],
     'Weight': ['Uniform', 'Uniform', 'Distance'],
     'SMOTE': ['No', 'No', 'Yes'],
     'Accuracy': [
@@ -1231,12 +1233,12 @@ results.style \
 ```
 ### Results
 
-Model 2 has the highest accuracy at 84.46% but this accuracy score is high because it is good at detecting the non-diabetic cases which are the majority of cases. It also has the highest ROC AUC score of 0.74 which means it's the best model at seperating different classes; however, the recall is 12.28%. This means the model is only correctly classifying 12.28% of the actual positive cases for diabetes. Since our purpose of using the kNN is to detect diabetes we wouldn't want to use this model. This leaves model 3 which has an accuracy of 70.14% and a much higher recall of 58.44%. Model 3 is able to correctly identify a little over half of the positive diabetes cases. This allows us to see how using the distance weight and using SMOTE to balance the classes lead to a better model. 
+Model 2 has the highest accuracy at 84.56% but this accuracy score is high because it is good at detecting the non-diabetic cases which are the majority of cases. It also has the highest ROC AUC score of 0.77 which means it's the best model at seperating different classes; however, the recall is 14.56%. This means the model is only correctly classifying 14.56% of the actual positive cases for diabetes. Since our purpose of using the kNN is to detect diabetes we wouldn't want to use this model. This leaves model 3 which has an accuracy of 69.77% and a much higher recall of 69.78%. Model 3 is able to correctly identify about 70% of the positive diabetes cases. This allows us to see how using the "distance" weight and using SMOTE to balance the classes can lead to higher accuracy in detecting diabetes. 
 
 
 ## Conclusion
 
-kNN's are a simple but powerful algorithm that can be used for
+kNN's are a simple but powerful algorithms that can be used for
 regression and classification problems. In classification problems the
 kNN's compute the distance between data points with the distance formula
 the user specifies and then use the majority of the k nearest neighbor
@@ -1246,7 +1248,6 @@ algorithm has proven useful in many industries such as healthcare.
 In this project we created three kNN models that were trained to classify
 unknown datapoints into diabetes or non-diabetes classes using the data from UC
 Irvines Machine Learning Repository called CDC Diabetes Health
-indicators. We were able to see how fine tuning a kNN model can help us detect diabetes in the healthcare setting.
-
+indicators. We were able to see how fine tuning a kNN model can help us detect diabetes in the healthcare setting. Model 2 and 3 showed potential with classifying diabetic cases but would need to be furthered improved to be used in a healthcare setting. 
 
 ## References
