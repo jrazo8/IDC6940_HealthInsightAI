@@ -35,19 +35,15 @@ editor:
 
 - The kNN algorithm is a nonparametric supervised learning algorithm that can be used for classification or regression problems. [@syriopoulos2023k]
 
-- In classification, it classifies a datapoint by finding the nearest k data specified and assigning the category based off the majority. 
-
-- Figure 1 illustrates this methodology with two distinct classes of hearts and circles. 
-
-![Figure 1](images/kNN_picture.png){width="200" height="200"}
-
-## Methodology- The classification process {.smaller}
-
 The classification process has three distinct steps:
 
 1. Distance Calculation 
 2. Neighbor Selection 
 3. Classification decision based on majority voting
+
+- Figure 1 illustrates this methodology with two distinct classes of hearts and circles. 
+
+![Figure 1](images/kNN_picture.png){width="200" height="200"}
 
 ## Methodology - Distance calculation {.smaller}
 
