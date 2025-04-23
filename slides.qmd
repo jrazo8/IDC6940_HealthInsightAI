@@ -6,9 +6,10 @@ date: '`r Sys.Date()`'
 format:
   revealjs:
     citeproc: true
+    css: styles.css
 course: Capstone Projects in Data Science
-bibliography: references.bib # file contains bibtex for references
-#always_allow_html: true # this allows to get PDF with HTML features
+bibliography: references.bib 
+#always_allow_html: true 
 self-contained: true
 execute: 
   warning: false
@@ -20,7 +21,7 @@ editor:
 
 ## Introduction  {.smaller}
 
-- The k-Nearest-Neighbors (kNN) is an algorithm that is being used in a variety of fields to classify or predict data [@ali2020diabetes]
+- The k-Nearest-Neighbors (kNN) is an algorithm that can be used in a variety of fields to classify or predict data [@ali2020diabetes]
 
 - It's a simple algorithm that classifies data based on how similar a datapoint is to a class of datapoints. [@zhang2016introduction]
 
@@ -28,31 +29,25 @@ editor:
 
 - One drawback from using this model is that it does have a higher computational cost than other models which means that it doesn’t perform as well or fast on big data [@deng2016efficient]
 
-- In this project we focused on the methodology and application of classification kNN models in the field of healthcare to predict diabetes. 
+- In this project we focused on the methodology and application of classification kNN models in the field of healthcare or public health to predict or screen for diabetes. 
 
 
 ## Methodology Overview {.smaller}
+
 
 - The kNN algorithm is a nonparametric supervised learning algorithm that can be used for classification or regression problems. [@syriopoulos2023k]
 
 The classification process has three distinct steps:
 
-1. Distance Calculation 
-2. Neighbor Selection 
-3. Classification decision based on majority voting
+::: {.scroll-box style="height: 425px; overflow-y: auto; border:1px solid #ccc; padding: 10px;"}
 
-- Figure 1 illustrates this methodology with two distinct classes of hearts and circles. 
 
-![Figure 1](images/kNN_picture.png){width="200" height="200"}
-
-## Methodology - Distance calculation {.smaller}
-
-1. Distance calculation
-The knn first measures the distance between the datapoint it’s trying to classify and all the training data points. There are different distance calculation methods that can be used but the default and most commonly used method with the kNN is the Euclidean distance formula [@kataria2013review].
+**1. Distance Calculation **
 
 $$
 d = \sqrt{(X_2 - X_1)^2 + (Y_2 - Y_1)^2}
 $$
+[@kataria2013review]
 ```{r}
 library(ggplot2)
 
@@ -85,26 +80,30 @@ text((X1 + X2) / 2 -2, (Y1 + Y2) / 2 + 3, "Euclidean Distance (d)", col = "purpl
 arrows((X1 + X2) / 2, (Y1 + Y2) / 2 + 2,(X1 + X2) / 2, (Y1 + Y2) / 2,col = "purple", lwd = 2, length = 0.1)
 
 #insert formula
-text(mean(c(X1, X2)), mean(c(Y1, Y2)) -5, 
-     labels = expression(d == sqrt((14 - 10)^2 + (16 - 12)^2)), 
-     col = "black", cex = 0.9, font = 1)
 
-text(mean(c(X1, X2)), mean(c(Y1, Y2)) -5, 
-     labels = expression(d == sqrt((14 - 10)^2 + (16 - 12)^2)), 
-     col = "black", cex = 0.9, font = 1)
+text(mean(c(X1, X2)), mean(c(Y1, Y2)) - 5, labels = expression(d == sqrt((14 - 10)^2 + (16 - 12)^2)), col = "black", cex = 0.9, font = 1)
+
+
+
 
 ```
-## Methodology - Neighbor Selection {.smaller}
 
-The kNN allows the selection of a parameter k that is used by the algorithm to choose how many neighbors will be used to classify the unknown datapoint. Studies recommend using cross-validation or heuristic methods, such as setting k to the square root of the dataset size, to determine an optimal value [@zhang2016introduction].
+**2. Neighbor Selection** 
 
-![Figure 1](images/kNN_picture.png){width="200" height="200"}
+      K=5  vs K=15
+    
+    
+**3. Classification decision based on majority voting**
+    
+      Majority wins 
+:::
 
-## Methodology - Majority voting {.smaller}
+## Methodology Visualization {.smaller}
 
-Once the k-nearest neighbors are identified, the algorithm assigns the new data point the most frequent class label among its neighbors. In cases of ties, distance-weighted voting can be applied, where closer neighbors have higher influence on the classification decision. 
+- Figure 1 illustrates this methodology with two distinct classes of hearts and circles. 
 
-![Figure 1](images/kNN_picture.png){width="200" height="200"}
+![Figure 1](images/kNN_picture.png){width="500" height="600"}
+
 
 ## Assumptions {.smaller}
 
@@ -129,32 +128,20 @@ Once the k-nearest neighbors are identified, the algorithm assigns the new data 
 In order to increase the accuracy of the model there are a few
 parameters that we can adjust.
 
-1.  Find the optimal k parameter: We can use gridsearch to find the best
+**1.  Find the optimal k parameter:** We can use gridsearch to find the best
     parameter k.
-2.  Change the distance metric: The kNN uses the euclidean distance by
+  
+**2.  Change the distance metric:** The kNN uses the euclidean distance by
     default but we can use the Manhattan distance, the Minkowski
     distance or another distance.
-3.  Weights: The kNN defaults to a "uniform" weight where it gives the
+  
+**3.  Weights:** The kNN defaults to a "uniform" weight where it gives the
     same weight to all the distances but it can be adjusted to
     "distance" so that the closest neighbors have more weight.
 
-## Data Exploration and Visualization {.smaller}
-
--   We explored the [CDC Diabetes Health
-Indicators](https://archive.ics.uci.edu/dataset/891/cdc+diabetes+health+indicators.)
-dataset, sourced from the UC Irvine Machine Learning Repository. It is a
-set of data that was gathered by the Centers for Disease Control and
-Prevention (CDC) through the Behavioral Risk Factor Surveillance System
-(BRFSS), which is one of the biggest continuous health surveys in the
-United States.
-
--   Python and the ucimlrepo package was used to import the dataset directly
-from the UCI Machine Learning Repository, following the recommended
-instructions. This enabled us to easily save, prepare, and analyze the
-data in view of the current research.
-
-
-## Data Exploration and Visualization - Variables {.smaller}
+## Dataset Overview {.smaller}
+- We explored the [CDC Diabetes Health
+Indicators](https://archive.ics.uci.edu/dataset/891/cdc+diabetes+health+indicators.) dataset, sourced from the UC Irvine Machine Learning Repository. 
 
 - The dataset consists of 253,680 survey responses and contains 21 feature variables and 1 binary target variable named **Diabetes_binary**
 
@@ -167,43 +154,6 @@ data in view of the current research.
 - **Continuous Variables**: BMI
 
 
-## Data Exploration and Visualization - Mean of Features {.smaller}
-
-Figure 4 shows a graph of the mean of different features in the data. 
-
-```{python}
-
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from ucimlrepo import fetch_ucirepo
-
-# Import dataset
-cdc_diabetes_health_indicators = fetch_ucirepo(id=891)
-
-# Combine features and targets into one DataFrame
-cdc_data_df = pd.concat([
-    cdc_diabetes_health_indicators.data.features,
-    cdc_diabetes_health_indicators.data.targets
-], axis=1)
-
-# Exclude binary variables
-ord_variables = ['GenHlth', 'MentHlth', 'PhysHlth', 'Age', 'Education', 'Income', 'BMI']
-
-# Calculate means 
-mean_values = cdc_data_df[ord_variables].mean().sort_values(ascending=False)
-
-# Create plot 
-plt.figure(figsize=(10, 6))
-sns.barplot(x=mean_values.values, y=mean_values.index, palette="plasma")
-plt.title("Figure 4: Mean Values of Ordinal and Continuous Variables")
-plt.xlabel("Mean")
-plt.ylabel("Feature")
-plt.tight_layout()
-plt.show()
-
-
-```
 ## Data Exploration and Visualization - Outliers {.smaller}
 
 Figure 5 shows us outliers in the data that can skew our results 
@@ -266,29 +216,6 @@ plt.show()
 ```
 
 
-## Data Exploration and Visualization - Correlation Analysis {.smaller}
-
-A correlation heatmap was generated in Figure 7 to examine relationships
-between variables. The correlation heatmap helps identify strongly
-correlated features, which may lead to redundancy in the model.
-
-```{python}
-
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# Compute correlation matrix (MUST BE IN THE SAME CHUNK)
-corr_matrix = cdc_data_df.corr()
-
-# Plot the heatmap
-plt.figure(figsize=(12, 8))
-sns.heatmap(corr_matrix, annot=True, fmt=".2f", cmap="coolwarm", linewidths=0.5, vmin=-1, vmax=1)
-plt.title("Figure 7: Feature Correlation Heatmap")
-plt.show()
-
-```
-
 ## Data Exploration and Visualization - Key Findings {.smaller}
 
 - There are no missing values, meaning no imputation is needed.
@@ -297,17 +224,18 @@ plt.show()
 
 - There is a class imbalance with the majority of cases not having diabetes.
 
-## Modeling and Results- Data Preprocessing {.smaller}
-- There was no missing data so we didn't have to remove or impute any values.
-- We started cleaning the data by dropping these duplicates.
+## Building the Models {.smaller}
+
+- There was no missing data so we didn't have to remove or impute any values but we did clean the data by dropping duplicate values. 
 - We kept the ordinal variables the same as they have meaningful natural order that will provide the kNN with meaningful distances.
-- We divided the data into testing and training data. We used **test_size=0.2** to use 80% of the data for training the kNN and 20% of the data for testing.
-- We chose to standardize them so that BMI and age could be on
-the same scale as the other features.
+- The data was divided into testing and training data. We used a **test_size=0.2** to use 80% of the data for training the kNN and 20% of the data for testing.
+- The features were standardized so that BMI and age could be on the same scale as the other features.
+- Gridsearch was used to find the optimal parameters for hyperparameter tuning
+- We experimented with different decision thresholds due to the imbalanced dataset. 
 
 ## Modeling and Results - Model Creation {.smaller}
 
-We chose to create three classification kNN models to illustrate the
+We chose to create four classification kNN models to illustrate the
 methodology.
 
 ```{r}
@@ -316,13 +244,14 @@ library(gt)
 
 #Create dataframe
 model_sum <- data.frame(
-  Model = c("Model 1", "Model 2", "Model 3"),
-  k = c(5, 15, 15), Weights = c("'uniform'", "'uniform'", "'distance'"),Distance = rep("Euclidean", 3),SMOTE = c("No", "No", "Yes"))
+  Model = c("Model 1", "Model 2", "Model 3", "Model 4" ),
+  k = c(5, 15, 15, 15), Weights = c("'uniform'", "'uniform'", "'distance'","'uniform'"),Distance = rep("Euclidean", 4),SMOTE = c("No", "No", "Yes","Yes"), 'Decision_Threshold' = c(0.5, 0.5, 0.5,0.2))
 
 # Create Table 
 model_sum %>%
   gt() %>%tab_header(title = md("**Table 4: Model Summary**")
-  ) %>%cols_label(Model = "Model Name",k = "k value",Weights = "Weights", Distance = "Distance",SMOTE = "SMOTE") %>%cols_align(align = "center",columns = everything()) %>%tab_options(table.border.top.width = px(2),table.border.bottom.width = px(2),heading.align = "left")
+  ) %>%cols_label(Model = "Model Name",k = "k value",Weights = "Weights", Distance = "Distance",SMOTE = "SMOTE",`Decision_Threshold` = "Decision Threshold") %>%cols_align(align = "center",columns = everything()) %>%tab_options(table.border.top.width = px(2),table.border.bottom.width = px(2),heading.align = "left")
+
 ```
 
 ```{python, echo=FALSE, include=FALSE}
@@ -377,28 +306,29 @@ X_train_smote, y_train_smote = smote.fit_resample(X_train_scaled, y_train)
 
 ```{python, echo=FALSE, include=FALSE}
 
-
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import classification_report, accuracy_score, f1_score
+from sklearn.metrics import classification_report, accuracy_score, f1_score, confusion_matrix 
 
 # Model 1: 
 knn_model_1 = KNeighborsClassifier(n_neighbors=5, weights='uniform', metric='euclidean')
 knn_model_1.fit(X_train_scaled, y_train)
 y_pred1 = knn_model_1.predict(X_test_scaled)
 print(classification_report(y_test, y_pred1))
+print(confusion_matrix(y_test, y_pred1))
 
 ```
 
 ```{python, echo=FALSE, include=FALSE}
 
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import classification_report, accuracy_score, f1_score
+from sklearn.metrics import classification_report, accuracy_score, f1_score, confusion_matrix
 
 # Model 2: 
 knn_model_2 = KNeighborsClassifier(n_neighbors=15, weights='uniform', metric='euclidean')
 knn_model_2.fit(X_train_scaled, y_train)
 y_pred2 = knn_model_2.predict(X_test_scaled)
 print(classification_report(y_test, y_pred2))
+print(confusion_matrix(y_test, y_pred2))
 
 ```
 
@@ -409,12 +339,29 @@ knn_model_3 = KNeighborsClassifier(n_neighbors=15, weights='distance', metric='e
 knn_model_3.fit(X_train_smote, y_train_smote)
 y_pred_3 = knn_model_3.predict(X_test_scaled)
 print(classification_report(y_test, y_pred_3))
+print(confusion_matrix(y_test, y_pred_3))
+
+```
+
+
+```{python, echo=FALSE, include=FALSE}
+
+#Model 4
+knn_model_4 = KNeighborsClassifier(n_neighbors=15, weights='uniform', metric='euclidean')
+knn_model_4.fit(X_train_smote, y_train_smote)
+
+# Adjust decision threshold
+y_prob_4 = knn_model_4.predict_proba(X_test_scaled)[:, 1]
+threshold = 0.2
+y_pred_4 = (y_prob_4 >= threshold).astype(int)
+print(classification_report(y_test, y_pred_4))
+print(confusion_matrix(y_test, y_pred_4))
 
 ```
 
 ## Modeling and Results- Evaluating the models {.smaller}
 
-The table below shows the summary of the three models.
+The table below shows the summary of the four models.
 
 ```{python}
 # import libraries
@@ -423,33 +370,40 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 
 # Create dataframe 
 results = pd.DataFrame({
-    'Model': ['Model 1', 'Model 2', 'Model 3'],'k': [5, 15, 15],
-    'Weight': ['Uniform', 'Uniform', 'Distance'],
-    'SMOTE': ['No', 'No', 'Yes'],
+    'Model': ['Model 1', 'Model 2', 'Model 3', 'Model 4'],'k': [5, 15, 15, 15],
+    'Weight': ['Uniform', 'Uniform', 'Distance', 'Uniform' ],
+    'SMOTE': ['No', 'No', 'Yes', 'Yes'],
+    'Decision Threshold': ['0.5', '0.5', '0.5', '0.2'],
     'Accuracy': [
         accuracy_score(y_test, y_pred1),
         accuracy_score(y_test, y_pred2),
-        accuracy_score(y_test, y_pred_3)
+        accuracy_score(y_test, y_pred_3),
+        accuracy_score(y_test, y_pred_4)
     ],
     'F1 Score': [
         f1_score(y_test, y_pred1),
         f1_score(y_test, y_pred2),
-        f1_score(y_test, y_pred_3)
+        f1_score(y_test, y_pred_3),
+        f1_score(y_test, y_pred_4)
     ],
     'Precision': [
         precision_score(y_test, y_pred1),
         precision_score(y_test, y_pred2),
-        precision_score(y_test, y_pred_3)
+        precision_score(y_test, y_pred_3),
+        precision_score(y_test, y_pred_4)
     ],
     'Recall': [
         recall_score(y_test, y_pred1),
         recall_score(y_test, y_pred2),
-        recall_score(y_test, y_pred_3)
+        recall_score(y_test, y_pred_3),
+        recall_score(y_test, y_pred_4)
     ],
     'ROC AUC': [
         roc_auc_score(y_test, knn_model_1.predict_proba(X_test_scaled)[:, 1]),
         roc_auc_score(y_test, knn_model_2.predict_proba(X_test_scaled)[:, 1]),
-        roc_auc_score(y_test, knn_model_3.predict_proba(X_test_scaled)[:, 1])
+        roc_auc_score(y_test, knn_model_3.predict_proba(X_test_scaled)[:, 1]),
+        roc_auc_score(y_test, knn_model_4.predict_proba(X_test_scaled)[:, 1])
+        
     ]
 })
 
@@ -471,24 +425,25 @@ results.style \
 
 
 ```
-## Modeling and Results {.smaller}
+
+
+## Results {.smaller}
 
 - Model 2 has the highest accuracy at 84.56% but this accuracy score is high because it is good at detecting the non-diabetic cases which are the majority of cases.
-- It also has the highest ROC AUC score of 0.77 which means it’s the best model at seperating different classes; however, the recall is 14.56%.
 
-- This means the model is only correctly classifying 14.56% of the actual positive cases for diabetes. 
+- Model 2 also has the highest ROC AUC score of 0.77 which means it’s the best model at separating different classes; however, the recall is 14.56% so it's only classifying 14.56% of the actual positive diabetic cases. 
 
-- Model 3 which has an accuracy of 69.77% and a much higher recall of 69.78%. Model 3 is able to correctly identify about 70% of the positive diabetes cases. 
+- Model 3 has an accuracy of 69.77% and a much higher recall of 69.58%. Model 3 is able to correctly classify about 70% of the positive diabetic cases.
+
+- Model 4 has the best recall with the ability to classify 91.62% of the positive diabetic cases but the overall accuracy is at 47.52% so it is classifying non-diabetic cases as diabetic. 
 
 ## Conclusion {.smaller}
 
-- kNN is a promising algorithmic model that can be further improved to detect diabetes. 
+- kNN is a promising algorithmic model that can be further improved to classify or screen for diabetes. 
 
-- In this project we created three kNN models that were trained to classify unknown datapoints into diabetes or non-diabetes classes using the data from UC Irvines Machine Learning Repository called CDC Diabetes Health indicators. 
+- Model 3 showed potential with classifying diabetic cases but would need to be further improved by being trained with data that shows more diabetic cases if it's going to be used in a healthcare setting. 
 
-- We were able to see how fine tuning a kNN model can help us detect diabetes in the healthcare setting. 
-
-- Model 2 and 3 showed potential with classifying diabetic cases but would need to be furthered improved by being trained with data that shows more dibetic cases if it's going to be used in a healthcare setting.
+- Model 4 showed high potential for screening for diabetes and would be useful in a public health setting where people are classified as high risk for diabetes based on their self reported helath indicators and referred for lifestyle education and biochemical testing. 
 
 ## References {.smaller}
 

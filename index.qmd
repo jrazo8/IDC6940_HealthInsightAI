@@ -169,6 +169,8 @@ of k and dataset characteristics. Ongoing research continues to refine
 kNN, making it a more efficient and reliable tool for medical
 applications.
 
+kNNs need a high accuracy in order to be used in medical applications but a recurrent problem that can be observed in disease prediction is imbalanced datasets that lead to low accuracy results. In the thesis [@esposito2021ghost], the authors found models trained on imbalanced data tended to classify the unknown data point as the majority class. This is a problem since many people are healthy and the diseases we are trying to identify make the minority class. It was noted that the default classification threshold of 0.5 doesn't work well with real world datasets that have imbalanced data. The authors recommended adjusting the decision threshold when dealing with imbalanced datasets. They discussed using random forest or their novel method they called "Generalized tHreshOld ShifTing Procedure (GHOST)" to adjust the classification threshold of machine learning classifiers. 
+
 Feature selection is another critical factor. Panwar et al.
 [@panwar2016k] demonstrated that focusing on just BMI and Diabetes
 Pedigree Function improved accuracy, suggesting that simplifying feature
@@ -453,7 +455,7 @@ needs it.
 #### Hyperparameter Tuning
 
 In order to increase the accuracy of the model there are a few
-parameters that we can adjust.
+parameters that we can adjust. 
 
 1.  Find the optimal k parameter: We can use gridsearch to find the best
     parameter k.
@@ -824,7 +826,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Compute correlation matrix (MUST BE IN THE SAME CHUNK)
+# Compute correlation matrix 
 corr_matrix = cdc_data_df.corr()
 
 # Plot the heatmap
@@ -1002,10 +1004,11 @@ development to enhance predictive performance.
 
 ### Models
 
-We chose to create three classification kNN models to illustrate the
+We chose to create four classification kNN models to illustrate the
 methodology. Model 1 will be our baseline model. Model 2
 shows us the impact of changing the k value on the classification model.
-Model 3 shows us how adjusting the class imbalance affects the model.
+Model 3 shows us how adjusting the class imbalance affects the model. Model 4 shows us how changing the decision threshold affects the classification of diabetes. 
+
 Table 4 shows us a summary of the models.
 
 ```{r}
@@ -1014,13 +1017,13 @@ library(gt)
 
 #Create dataframe
 model_sum <- data.frame(
-  Model = c("Model 1", "Model 2", "Model 3"),
-  k = c(5, 15, 15), Weights = c("'uniform'", "'uniform'", "'distance'"),Distance = rep("Euclidean", 3),SMOTE = c("No", "No", "Yes"))
+  Model = c("Model 1", "Model 2", "Model 3", "Model 4" ),
+  k = c(5, 15, 15, 15), Weights = c("'uniform'", "'uniform'", "'distance'","'uniform'"),Distance = rep("Euclidean", 4),SMOTE = c("No", "No", "Yes","Yes"), 'Decision_Threshold' = c(0.5, 0.5, 0.5,0.2))
 
 # Create Table 
 model_sum %>%
   gt() %>%tab_header(title = md("**Table 4: Model Summary**")
-  ) %>%cols_label(Model = "Model Name",k = "k value",Weights = "Weights", Distance = "Distance",SMOTE = "SMOTE") %>%cols_align(align = "center",columns = everything()) %>%tab_options(table.border.top.width = px(2),table.border.bottom.width = px(2),heading.align = "left")
+  ) %>%cols_label(Model = "Model Name",k = "k value",Weights = "Weights", Distance = "Distance",SMOTE = "SMOTE",`Decision_Threshold` = "Decision Threshold") %>%cols_align(align = "center",columns = everything()) %>%tab_options(table.border.top.width = px(2),table.border.bottom.width = px(2),heading.align = "left")
 
 ```
 
@@ -1088,15 +1091,15 @@ X_test_scaled = scaler.transform(X_test)
 
 ```
 
-For model 3 we chose to apply SMOTE to deal with the class imbalance. We
+For model 3 and 4 we chose to apply SMOTE to deal with the class imbalance. We
 chose to go with this because there are very few diabetes samples in our
 data and that might impact the accuracy of the results.
 
 ```{python}
-#Extra pre-processing step for Model 3 ONLY
+#Extra pre-processing step for Model 3 & 4 ONLY
 from imblearn.over_sampling import SMOTE
 
-# Apply SMOTE to training data to use for Model 3
+# Apply SMOTE to training data to use for Model 3 & 4
 smote = SMOTE(random_state=42)
 X_train_smote, y_train_smote = smote.fit_resample(X_train_scaled, y_train)
 
@@ -1117,13 +1120,14 @@ Model 1 is our baseline model and has an arbitrary k value of 5. It uses the euc
 ```{python}
 
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import classification_report, accuracy_score, f1_score
+from sklearn.metrics import classification_report, accuracy_score, f1_score, confusion_matrix 
 
 # Model 1: 
 knn_model_1 = KNeighborsClassifier(n_neighbors=5, weights='uniform', metric='euclidean')
 knn_model_1.fit(X_train_scaled, y_train)
 y_pred1 = knn_model_1.predict(X_test_scaled)
 print(classification_report(y_test, y_pred1))
+print(confusion_matrix(y_test, y_pred1))
 
 ```
 
@@ -1134,18 +1138,19 @@ In model 2 we chose to still keep using the euclidean distance but this time we 
 ```{python}
 
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import classification_report, accuracy_score, f1_score
+from sklearn.metrics import classification_report, accuracy_score, f1_score, confusion_matrix
 
 # Model 2: 
 knn_model_2 = KNeighborsClassifier(n_neighbors=15, weights='uniform', metric='euclidean')
 knn_model_2.fit(X_train_scaled, y_train)
 y_pred2 = knn_model_2.predict(X_test_scaled)
 print(classification_report(y_test, y_pred2))
+print(confusion_matrix(y_test, y_pred2))
 
 ```
 #### Model 3
 
-Model 3 attempts to show us how using SMOTE to try to balance the target variable affects the model. It uses the same k value as model 2 but uses a "distance" weight instead of a "uniform" weight.
+Model 3 attempts to show us how using SMOTE to try to balance the target variable affects the model. It uses the same k value as model 2 but uses a "distance" weight instead of a "uniform" weight. The distance weight gives more weight to the closest neighbors. 
 
 ```{python}
 
@@ -1154,11 +1159,58 @@ knn_model_3 = KNeighborsClassifier(n_neighbors=15, weights='distance', metric='e
 knn_model_3.fit(X_train_smote, y_train_smote)
 y_pred_3 = knn_model_3.predict(X_test_scaled)
 print(classification_report(y_test, y_pred_3))
+print(confusion_matrix(y_test, y_pred_3))
 
 ```
+#### Model 4
+
+Model 4 attempts to increase the accuracy of the model by using gridsearch to find the optimal k parameter and weight parameter. It also addresses the imbalanced class dataset by using SMOTE and adjusting the decision threshold which our research says should increase the classification of the minority class (diabetes).
+
+```{python}
+
+#Grid Search 
+'''
+from sklearn.model_selection import GridSearchCV
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import classification_report, make_scorer, recall_score
+
+#parameters we will test 
+knn_params = {'n_neighbors': [3, 5, 15, 20, 45],'weights': ['uniform', 'distance'],'metric': ['euclidean', 'manhattan', 'minkowski']}
+
+# optimize recall for diabetes cases 
+recall_class1 = make_scorer(recall_score, pos_label=1)
+
+#initialize knn model 
+knn = KNeighborsClassifier()
+
+#grid search 
+grid_search = GridSearchCV(estimator=knn,param_grid=knn_params,scoring=recall_class1,cv=5,n_jobs=-1,verbose=1)
+grid_search.fit(X_train_smote, y_train_smote)
+
+#Print best parameters
+print("Optimal parameters", grid_search.best_params_)
+'''
+
+```
+```{python}
+
+#Model 4
+
+knn_model_4 = KNeighborsClassifier(n_neighbors=15, weights='uniform', metric='euclidean')
+knn_model_4.fit(X_train_smote, y_train_smote)
+
+# Adjust decision threshold
+y_prob_4 = knn_model_4.predict_proba(X_test_scaled)[:, 1]
+threshold = 0.2
+y_pred_4 = (y_prob_4 >= threshold).astype(int)
+print(classification_report(y_test, y_pred_4))
+print(confusion_matrix(y_test, y_pred_4))
+
+```
+
 #### Evaluating and Comparing the models 
 
-Now that the three models have been trained we can focus on evaluating them. Table 5 below shows the summary of the three models. 
+Now that the four models have been trained we can focus on evaluating them. Table 5 below shows the summary of the four models. 
 
 ```{python}
 # import libraries
@@ -1167,33 +1219,40 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 
 # Create dataframe 
 results = pd.DataFrame({
-    'Model': ['Model 1', 'Model 2', 'Model 3'],'k': [5, 15, 15],
-    'Weight': ['Uniform', 'Uniform', 'Distance'],
-    'SMOTE': ['No', 'No', 'Yes'],
+    'Model': ['Model 1', 'Model 2', 'Model 3', 'Model 4'],'k': [5, 15, 15, 15],
+    'Weight': ['Uniform', 'Uniform', 'Distance', 'Uniform' ],
+    'SMOTE': ['No', 'No', 'Yes', 'Yes'],
+    'Decision Threshold': ['0.5', '0.5', '0.5', '0.2'],
     'Accuracy': [
         accuracy_score(y_test, y_pred1),
         accuracy_score(y_test, y_pred2),
-        accuracy_score(y_test, y_pred_3)
+        accuracy_score(y_test, y_pred_3),
+        accuracy_score(y_test, y_pred_4)
     ],
     'F1 Score': [
         f1_score(y_test, y_pred1),
         f1_score(y_test, y_pred2),
-        f1_score(y_test, y_pred_3)
+        f1_score(y_test, y_pred_3),
+        f1_score(y_test, y_pred_4)
     ],
     'Precision': [
         precision_score(y_test, y_pred1),
         precision_score(y_test, y_pred2),
-        precision_score(y_test, y_pred_3)
+        precision_score(y_test, y_pred_3),
+        precision_score(y_test, y_pred_4)
     ],
     'Recall': [
         recall_score(y_test, y_pred1),
         recall_score(y_test, y_pred2),
-        recall_score(y_test, y_pred_3)
+        recall_score(y_test, y_pred_3),
+        recall_score(y_test, y_pred_4)
     ],
     'ROC AUC': [
         roc_auc_score(y_test, knn_model_1.predict_proba(X_test_scaled)[:, 1]),
         roc_auc_score(y_test, knn_model_2.predict_proba(X_test_scaled)[:, 1]),
-        roc_auc_score(y_test, knn_model_3.predict_proba(X_test_scaled)[:, 1])
+        roc_auc_score(y_test, knn_model_3.predict_proba(X_test_scaled)[:, 1]),
+        roc_auc_score(y_test, knn_model_4.predict_proba(X_test_scaled)[:, 1])
+        
     ]
 })
 
@@ -1233,7 +1292,8 @@ results.style \
 ```
 ### Results
 
-Model 2 has the highest accuracy at 84.56% but this accuracy score is high because it is good at detecting the non-diabetic cases which are the majority of cases. It also has the highest ROC AUC score of 0.77 which means it's the best model at seperating different classes; however, the recall is 14.56%. This means the model is only correctly classifying 14.56% of the actual positive cases for diabetes. Since our purpose of using the kNN is to detect diabetes we wouldn't want to use this model. This leaves model 3 which has an accuracy of 69.77% and a much higher recall of 69.78%. Model 3 is able to correctly identify about 70% of the positive diabetes cases. This allows us to see how using the "distance" weight and using SMOTE to balance the classes can lead to higher accuracy in detecting diabetes. 
+
+Model 2 has the highest accuracy at 84.56% but this accuracy score is high because it is good at detecting the non-diabetic cases which are the majority of cases. It also has the highest ROC AUC score of 0.77 which means it's the best model at separating different classes; however, the recall is 14.56%. This means the model is only correctly classifying 14.56% of the actual positive cases for diabetes. Since our purpose of using the kNN is to detect diabetes we wouldn't want to use this model. This leaves model 3 which has an accuracy of 69.77% and a much higher recall of 69.78%. Model 3 is able to correctly identify about 70% of the positive diabetes cases. This allows us to see how using the "distance" weight and using SMOTE to balance the classes can lead to higher accuracy in detecting diabetes. 
 
 
 ## Conclusion
