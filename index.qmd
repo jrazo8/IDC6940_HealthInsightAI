@@ -1133,7 +1133,7 @@ print(confusion_matrix(y_test, y_pred1))
 ```{python}
 
 #Grid Search 
-'''
+
 from sklearn.model_selection import GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, make_scorer, recall_score
@@ -1153,7 +1153,6 @@ grid_search.fit(X_train_smote, y_train_smote)
 
 #Print best parameters
 print("Optimal parameters", grid_search.best_params_)
-'''
 
 ```
 
