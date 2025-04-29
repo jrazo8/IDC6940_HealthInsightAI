@@ -7,8 +7,8 @@ format:
   html:
     code-fold: true
 course: Capstone Projects in Data Science
-bibliography: references.bib # file contains bibtex for references
-always_allow_html: true # this allows to get PDF with HTML features
+bibliography: references.bib 
+always_allow_html: true 
 self-contained: true
 execute: 
   warning: false
@@ -606,7 +606,7 @@ table_data <- data.frame(
   )
 )
 
-# Print Table with knitr::kable()
+# Print Table 
 kable(table_data, caption = "Table 2. Summary of 22 Variables", align = "l")
 
 
@@ -638,7 +638,7 @@ cdc_data_df["Diabetes_binary"] = cdc_diabetes_health_indicators.data.targets
 import pandas as pd
 from ucimlrepo import fetch_ucirepo 
   
-# fetch dataset 
+# dataset 
 cdc_diabetes_health_indicators = fetch_ucirepo(id=891) 
   
 # data (as pandas dataframes) 
@@ -663,7 +663,7 @@ library(readr)
 # Load the dataset
 exploratory_df <- read_csv("eda.csv")
 
-# Print table with a new title (caption)
+# Print table
 kable(exploratory_df, caption = "Table 3: Data Integrity Report")
 
 
@@ -1257,7 +1257,7 @@ results = pd.DataFrame({
     ]
 })
 
-# Design the table 
+# Create the table 
 results.style \
     .set_caption("KNN Model Performance Summary") \
     .format({
